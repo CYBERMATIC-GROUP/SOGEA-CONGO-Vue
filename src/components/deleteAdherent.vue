@@ -65,7 +65,7 @@ const Delete = async () => {
   } catch (error) {
     console.error(error);
     loading.value = false;
-    // getError("Erreur lors de l'ajout de l'adhérent");
+    getError((error as any).response?.data?.fault?.detail);
   }
 };
 </script>

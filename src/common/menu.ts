@@ -16,6 +16,6 @@ export const menu: any = [
     {
         id: 2,
         text: "Déconnexion",
-        icon: LogOut
+        icon: LogOut,
     },
 ]

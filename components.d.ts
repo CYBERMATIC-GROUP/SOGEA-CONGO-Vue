@@ -41,7 +41,6 @@ declare module 'vue' {
     DropdownMenuSubContent: typeof import('./src/components/ui/dropdown-menu/DropdownMenuSubContent.vue')['default']
     DropdownMenuSubTrigger: typeof import('./src/components/ui/dropdown-menu/DropdownMenuSubTrigger.vue')['default']
     DropdownMenuTrigger: typeof import('./src/components/ui/dropdown-menu/DropdownMenuTrigger.vue')['default']
-    ErreursForm: typeof import('./src/components/erreursForm.vue')['default']
     FormAdherent: typeof import('./src/components/formAdherent.vue')['default']
     FormAutomobile: typeof import('./src/components/formAutomobile.vue')['default']
     Header: typeof import('./src/components/Header.vue')['default']

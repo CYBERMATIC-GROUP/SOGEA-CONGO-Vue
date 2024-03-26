@@ -12,9 +12,30 @@ import {
   MenubarRoot,
   MenubarTrigger,
 } from "radix-vue";
-import { menu } from "../common/menu.ts";
+import { menu } from "@/common/menu";
+import router from "@/router";
 
 const currentMenu = ref("");
+
+const handleMenuItemClick = (item: any) => {
+  if (item.text == "Déconnexion") {
+    localStorage.removeItem("adherent");
+    localStorage.removeItem("UTILISATEUER_LOGIN");
+    localStorage.removeItem("Agent");
+    router.push({ path: "/connexion" });
+  }
+};
+
+const storageAdherentString: string | null = localStorage.getItem("Agent");
+const prenom = ref("");
+
+if (storageAdherentString !== null) {
+  const storageAdherent: { Prenom: string } = JSON.parse(storageAdherentString);
+  prenom.value = storageAdherent.Prenom;
+  console.log("Agent Prénom:", storageAdherent.Prenom);
+} else {
+  console.log("Aucun agent trouvé dans le stockage local.");
+}
 </script>
 
 <template>
@@ -47,12 +68,19 @@ const currentMenu = ref("");
             <div>
               <MenubarRoot v-model="currentMenu">
                 <MenubarMenu value="file">
-                  <MenubarTrigger>
+                  <MenubarTrigger class="flex flex-row items-center space-x-1">
                     <Avatar
                       image="http://umngflu.cluster031.hosting.ovh.net/assets/images/avatars/profile-image.png"
                       class="mr-2 w-10"
                       shape="circle"
                     />
+                    <div class="flex flex-col items-start">
+                      <span class="text-[.8rem] font-[300]"
+                        >Agent
+                        <i class="fa fa-circle text-green-300 text-[.6rem]"></i>
+                      </span>
+                      <span class="text-[.8rem] font-[400]">{{ prenom }}</span>
+                    </div>
                   </MenubarTrigger>
                   <MenubarPortal>
                     <MenubarContent
@@ -64,6 +92,7 @@ const currentMenu = ref("");
                       <MenubarItem
                         v-for="item in menu"
                         class="group text-[13px] leading-none text-grass11 rounded flex items-center h-[25px] px-[10px] relative select-none outline-none data-[state=open]:bg-green4 data-[state=open]:text-grass11 data-[highlighted]:bg-gradient-to-br data-[highlighted]:from-green9 data-[highlighted]:to-green10 data-[highlighted]:text-green1 data-[highlighted]:data-[state=open]:text-green1 data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none hover:bg-[#F3F6F9] py-4 hover:text-blue-500 cursor-pointer"
+                        @click="handleMenuItemClick(item)"
                       >
                         <component
                           :is="item.icon"

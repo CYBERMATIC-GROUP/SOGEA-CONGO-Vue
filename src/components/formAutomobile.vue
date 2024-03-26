@@ -257,7 +257,7 @@
             label="Proprietaire"
             type="select"
             id="Proprietaire"
-            :readonly="$route.params.id !== undefined && !modif"
+            :readonly="$route.params.id !== undefined || !modif"
             v-model="IDProprietaire"
             :valid="errors.IDProprietaire"
             v-bind="IDProprietaireAttrs"
@@ -481,7 +481,7 @@ const onSubmit = !values
       } catch (error) {
         console.error(error);
         loading.value = false;
-        getError("Erreur lors de l'ajout de l'adhérent");
+        getError((error as any).response?.data?.fault?.detail);
       }
     })
   : handleSubmit(async (value) => {
@@ -499,7 +499,7 @@ const onSubmit = !values
       } catch (error) {
         loading.value = false;
         console.error(error);
-        getError("Erreur lors de la modification de l'automobile");
+        getError((error as any).response?.data?.fault?.detail);
       }
     });
 

@@ -191,7 +191,7 @@ const onSubmit = handleSubmit(async (values) => {
   try {
     let response = await loginStore.login(data);
     console.log(response);
-    localStorage.setItem("Agent", response);
+    localStorage.setItem("Agent", JSON.stringify(response));
     authStore.setConnected(true);
     router.push({ path: "/" });
   } catch (error) {
@@ -235,6 +235,7 @@ const onConnexion = newHandleSubmit(async (values) => {
   } catch (error) {
     loading.value = false;
     console.error(error);
+    getError((error as any).response?.data?.fault?.detail);
   }
 });
 </script>

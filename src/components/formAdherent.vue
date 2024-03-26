@@ -400,9 +400,9 @@ const onSubmit = !values
           router.push({ path: "/automobile/" + response.IDProprietaire });
         }, 3000);
       } catch (error) {
-        console.error(error);
+        console.error((error as any).response?.data?.fault?.detail);
         loading.value = false;
-        getError("Erreur lors de l'ajout de l'adhérent");
+        getError((error as any).response?.data?.fault?.detail);
       }
     })
   : handleSubmit(async (value) => {
@@ -421,6 +421,7 @@ const onSubmit = !values
       } catch (error) {
         loading.value = false;
         console.error(error);
+        getError((error as any).response?.data?.fault?.detail);
         getError("Erreur lors de la modification de l'adhérent");
       }
     });

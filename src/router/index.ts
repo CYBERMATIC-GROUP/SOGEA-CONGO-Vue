@@ -25,32 +25,32 @@ const router = createRouter({
       path: '/adherent',
       name: 'adherent',
       component: Adherent,
-      // meta: { requiresAuth: true },
+      meta: { requiresAuth: true },
     },
     {
       path: '/automobile/:id', // Chemin avec un paramètre ID
       name: 'automobileWithId', // Nom de la route
       component: Automobile, // Composant lié à la route
-      // meta: { requiresAuth: true }
+      meta: { requiresAuth: true }
     },
     {
       path: '/automobile', // Chemin sans paramètres
       name: 'automobileWithoutId', // Nom de la route
       component: Automobile, // Composant lié à la route
-      // meta: { requiresAuth: true },
+      meta: { requiresAuth: true },
     },
 
     {
       path: '/liste-automobile', // Chemin sans paramètres
       name: 'liste-automobile', // Nom de la route
       component: ListeAutomobile, // Composant lié à la route
-      // meta: { requiresAuth: true },
+      meta: { requiresAuth: true },
     },
     {
       path: '/liste-adherent', // Chemin sans paramètres
       name: 'liste-adherent', // Nom de la route
       component: ListeAdherent, // Composant lié à la route
-      // meta: { requiresAuth: true },
+      meta: { requiresAuth: true },
     }
   ]
 })

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { api } from "../axios/axios";
-import type { Arrondissement } from '@/model/Arrondissement';
+import type { Arrondissement } from '../model/arrondissement';
 const EndPoint = "/sogeacongo/v1/Arrondissement"
 
 export const useArrondissement = defineStore('arrondissement', {
