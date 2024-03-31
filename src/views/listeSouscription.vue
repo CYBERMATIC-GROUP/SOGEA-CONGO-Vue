@@ -2,7 +2,11 @@
   <Card class="w-full shadow-md bg-[#73B1E7] rounded-xl">
     <div class="w-full h-[2rem] select-none flex justify-center items-center">
       <h1 class="font-[600] text-white text-[1.3rem]">
-        Liste des souscriptions
+        {{
+          $route.path == "/impression-viniette"
+            ? "Sélectionnez les souscriptions à imprimer"
+            : "Liste des souscriptions"
+        }}
       </h1>
     </div>
     <CardContent class="bg-white">
@@ -50,6 +54,7 @@ import Table from "../components/table.vue";
 import { type Souscription } from "@/model/souscription";
 import { useSouscription } from "@/stores/souscription";
 import router from "@/router";
+import { useRoute } from "vue-router";
 
 const searchService = ref("");
 const visibleProduit = ref<Souscription[]>([]);
@@ -124,8 +129,20 @@ const columns = [
   },
 ];
 
+const route = useRoute();
+
+const emits = defineEmits(["imprimer"]);
+
+const toggleImprimer = (data: any) => {
+  emits("imprimer", data);
+};
+
 const Update = (data: any) => {
-  sessionStorage.setItem("souscription", JSON.stringify(data));
-  router.push({ path: "/details-souscription" });
+  if (route.path == "/impression-viniette") {
+    toggleImprimer(data);
+  } else {
+    sessionStorage.setItem("souscription", JSON.stringify(data));
+    router.push({ path: "/details-souscription" });
+  }
 };
 </script>

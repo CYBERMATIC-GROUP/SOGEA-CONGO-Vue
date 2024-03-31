@@ -12,7 +12,7 @@ export const accordionItems : any = [
         },
         {
           label: "Consultation",
-          route: "#",
+          route: "/consultation",
         },
       ],
     },
@@ -38,11 +38,11 @@ export const accordionItems : any = [
       content: [
         {
           label: "Listes des societes",
-          route: "#",
+          route: "/liste-societe",
         },
         {
           label: "Ajouter une societe",
-          route: "#",
+          route: "/societe",
         },
       ],
     },

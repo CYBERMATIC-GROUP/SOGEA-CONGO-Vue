@@ -5,6 +5,7 @@ const EndPoint = "/sogeacongo/v1//SOUSCRIPTIONS_LISTE"
 const endPointSouscription = "/sogeacongo/v1/SoldeCompte"
 const endPointImprime = "/sogeacongo/v1/Imprime_Releve_Compte/"
 const endPointEcheance = "/sogeacongo/v1/Versement_Echeance/"
+const endPointImprimeViniette = "/sogeacongo/v1/Imprime_Viniette_Recto/"
 
 
 export const useSouscription = defineStore('souscription', {
@@ -48,5 +49,15 @@ export const useSouscription = defineStore('souscription', {
             console.error('Erreur lors de l\'echeance', error);
             throw error;
             }
-    }
+    },
+    async fetchImprime(IDSOUSCRIPTIONS : number) {
+      try{
+          const response = await api.get(endPointImprimeViniette+IDSOUSCRIPTIONS);
+          this.sousciption = response.data
+          return response.data; 
+        } catch (error) {
+          console.error('Erreur lors de l\'impression', error);
+          throw error;
+        }
+      },
 }});

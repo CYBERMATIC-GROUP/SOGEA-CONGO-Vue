@@ -21,7 +21,10 @@
           ></i>
         </router-link>
       </div>
-      <div class="flex flex-row justify-between">
+      <router-link
+        to="/impression-viniette"
+        class="flex flex-row justify-between"
+      >
         <div
           class="flex flex-col items-center space-y-3 w-[50%] border-r hover:bg-[#F3F6F9] cursor-pointer"
         >
@@ -30,7 +33,7 @@
             class="fa-print fa-sharp fa-solid text-[2rem] text-green-500 pb-4"
           ></i>
         </div>
-      </div>
+      </router-link>
     </CardContent>
   </Card>
 </template>

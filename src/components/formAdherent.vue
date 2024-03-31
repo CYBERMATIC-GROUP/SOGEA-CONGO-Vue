@@ -422,7 +422,6 @@ const onSubmit = !values
         loading.value = false;
         console.error(error);
         getError((error as any).response?.data?.fault?.detail);
-        getError("Erreur lors de la modification de l'adhérent");
       }
     });
 

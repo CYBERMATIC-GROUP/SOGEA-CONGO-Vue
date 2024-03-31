@@ -299,6 +299,7 @@ import Table from "../components/table.vue";
 import AutomobileListe from "./AutomobileListe.vue";
 import { type XEcheancierAnnuelItem } from "../model/XEcheancierAnnuel";
 import { getSuccess, getError } from "../common/notification";
+import { useAutomobile } from "@/stores/automobile";
 
 const data = ref();
 const open = ref(false);
@@ -357,7 +358,6 @@ const toggleInput = async () => {
       data.value.IDAutomobiles,
       donne
     );
-    alert("Correct");
     console.log(response);
     chargement.value = false;
     tabAmmortissement.value = response.XECHEANCIER_MENSUEL;
@@ -507,5 +507,21 @@ watch(data, (newValue, oldValue) => {
   data.value = newValue;
   console.log(data.value);
   toggleInput();
+});
+
+const getAutomobile = useAutomobile();
+
+onMounted(async () => {
+  const storage = sessionStorage.getItem("amortissement");
+  if (storage !== null) {
+    const storageAmortissement = JSON.parse(storage);
+    const id = storageAmortissement.IDAutomobiles;
+    try {
+      let response = await getAutomobile.OneAutomobile(id);
+      data.value = response;
+    } catch (error) {
+      getError((error as any).response?.data?.fault?.detail);
+    }
+  }
 });
 </script>

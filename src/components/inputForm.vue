@@ -19,7 +19,9 @@
           $emit('update:modelValue', ($event.target as HTMLInputElement)?.value)
         "
         :class="[
-          'block outline-none border  px-2 py-1 w-full rounded-md  shadow-sm disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500',
+          type == 'file'
+            ? 'block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100'
+            : 'block outline-none border  px-2 py-1 w-full rounded-md  shadow-sm disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500',
           valid
             ? 'border-red-color  focus:border-red-color'
             : 'border-secondary-500 border-[#737272] focus:border-bg-primary',

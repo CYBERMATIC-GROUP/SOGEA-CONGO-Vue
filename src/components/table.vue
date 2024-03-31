@@ -44,8 +44,13 @@
 
         <template v-if="column.key === columns[columns.length - 1].key">
           <div class="flex flex-row justify-between items-center">
-            <span v-if="column.key === 'DateFin'">
-              <p>{{ convertirDateEnFrancais(record.DateFin) }}</p>
+            <span
+              v-if="column.key === 'DateFin' || column.key === 'DateDelivrance'"
+            >
+              <p v-if="column.key === 'DateFin'">
+                {{ convertirDateEnFrancais(record.DateFin) }}
+              </p>
+              <p v-else>{{ convertirDateEnFrancais(record.DateDelivrance) }}</p>
             </span>
             <span v-else>
               {{ record[columns[columns.length - 1].key] }}
@@ -65,7 +70,9 @@
                         '/nouvelle-souscription/renouvelement-contrat' &&
                       $route.path != '/liste-souscription' &&
                       $route.path != '/amortissement' &&
-                      $route.path != '/nouvelle-souscription'
+                      $route.path != '/nouvelle-souscription' &&
+                      $route.path != '/commande' &&
+                      $route.path != '/impression-viniette'
                     "
                     class="font-[400] cursor-pointer hover:bg-[#FAFAFA]"
                     >Supprimer</DropdownMenuCheckboxItem
@@ -76,14 +83,20 @@
                         '/nouvelle-souscription/renouvelement-contrat' &&
                       $route.path != '/liste-souscription' &&
                       $route.path != '/amortissement' &&
-                      $route.path != '/nouvelle-souscription'
+                      $route.path != '/nouvelle-souscription' &&
+                      $route.path != '/commande' &&
+                      $route.path != '/impression-viniette'
                     "
                   />
                   <DropdownMenuCheckboxItem
                     @click="Update(record)"
                     class="font-[400] cursor-pointer hover:bg-[#FAFAFA]"
                   >
-                    Afficher
+                    {{
+                      $route.path == "/impression-viniette"
+                        ? "Sélectionner"
+                        : "Afficher"
+                    }}
                   </DropdownMenuCheckboxItem>
                 </DropdownMenuContent>
               </DropdownMenu>

@@ -62,6 +62,7 @@ import { Search } from "lucide-vue-next";
 import { Input } from "@/components/ui/input";
 import Table from "../components/table.vue";
 import { useAdherent } from "@/stores/adherent";
+import deleteAdherent from "../components/deleteAdherent.vue";
 import { type Proprietaire } from "@/model/proprietaire";
 import updateAdherent from "../components/updateAdherent.vue";
 import { useRoute } from "vue-router";

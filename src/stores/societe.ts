@@ -18,5 +18,35 @@ export const useSociete = defineStore('societe', {
         throw error;
       }
     },
+    async createSociete(data : object) {
+      try { 
+        const response = await api.post(EndPoint, data);
+        this.societe = response.data;
+        return response.data; 
+      } catch (error) {
+        console.error('Erreur lors de la création des societes', error);
+        throw error;
+      }
+    },
+    async updateSociete(id : number,data : object) {
+      try { 
+        const response = await api.put(EndPoint+"/"+id, data);
+        this.societe = response.data;
+        return response.data; 
+      } catch (error) {
+        console.error('Erreur lors de la mis à jour des societes', error);
+        throw error;
+      }
+    },
+    async deleteSociete(id : number) {
+      try { 
+        const response = await api.delete(EndPoint+"/"+id);
+        this.societe = response.data;
+        return response.data; 
+      } catch (error) {
+        console.error('Erreur lors de la suppresion des societes', error);
+        throw error;
+      }
+    },
   },
 });

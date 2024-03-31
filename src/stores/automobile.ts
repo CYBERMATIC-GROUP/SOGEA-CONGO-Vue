@@ -46,5 +46,15 @@ export const useAutomobile = defineStore('automobile', {
             throw error;
           }
         },
+
+        async OneAutomobile(id: any) {
+          try{
+              const response = await api.get(EndPoint+"/"+id);
+              return response.data; 
+            } catch (error) {
+              console.error('Erreur lors de la recuperation de l\'automiblie', error);
+              throw error;
+            }
+          },
   },
 });

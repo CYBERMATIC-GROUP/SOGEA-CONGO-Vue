@@ -18,6 +18,7 @@ declare module 'vue' {
     CardTitle: typeof import('./src/components/ui/card/CardTitle.vue')['default']
     DeleteAdherent: typeof import('./src/components/deleteAdherent.vue')['default']
     DeleteAutomobile: typeof import('./src/components/deleteAutomobile.vue')['default']
+    DeleteSociete: typeof import('./src/components/deleteSociete.vue')['default']
     Dialog: typeof import('./src/components/ui/dialog/Dialog.vue')['default']
     DialogClose: typeof import('./src/components/ui/dialog/DialogClose.vue')['default']
     DialogContent: typeof import('./src/components/ui/dialog/DialogContent.vue')['default']
@@ -43,6 +44,7 @@ declare module 'vue' {
     DropdownMenuTrigger: typeof import('./src/components/ui/dropdown-menu/DropdownMenuTrigger.vue')['default']
     FormAdherent: typeof import('./src/components/formAdherent.vue')['default']
     FormAutomobile: typeof import('./src/components/formAutomobile.vue')['default']
+    FormSociete: typeof import('./src/components/FormSociete.vue')['default']
     Header: typeof import('./src/components/Header.vue')['default']
     Input: typeof import('./src/components/ui/input.vue')['default']
     InputForm: typeof import('./src/components/inputForm.vue')['default']
@@ -55,5 +57,6 @@ declare module 'vue' {
     TextAndSelect: typeof import('./src/components/ui/TextAndSelect.vue')['default']
     UpdateAdherent: typeof import('./src/components/updateAdherent.vue')['default']
     UpdateAutomobile: typeof import('./src/components/updateAutomobile.vue')['default']
+    UpdateSociete: typeof import('./src/components/updateSociete.vue')['default']
   }
 }

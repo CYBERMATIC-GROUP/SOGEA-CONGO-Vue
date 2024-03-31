@@ -13,6 +13,10 @@ import Amortissement from '@/views/Amortissement.vue';
 import listeSouscription from '@/views/listeSouscription.vue';
 import detailSouscription from '@/views/detailSouscription.vue';
 import Commande from '@/views/Commande.vue';
+import imprimer from '@/views/imprimer.vue';
+import Consultation from '@/views/Consultation.vue';
+import SocieteListe from '@/views/SocieteListe.vue';
+import Societe from '@/views/Societe.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -99,6 +103,30 @@ const router = createRouter({
       path: '/commande',
       name: 'commande', 
       component: Commande, 
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/impression-viniette',
+      name: 'impression-viniette', 
+      component: imprimer, 
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/consultation',
+      name: 'consultation', 
+      component: Consultation, 
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/liste-societe',
+      name: 'liste-societe', 
+      component: SocieteListe, 
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/societe',
+      name: 'societe', 
+      component: Societe, 
       meta: { requiresAuth: true }
     },
   ]
