@@ -8,7 +8,7 @@ export const accordionItems : any = [
       content: [
         {
           label: "Saisie",
-          route: "#",
+          route: "/saisie",
         },
         {
           label: "Consultation",
@@ -23,11 +23,11 @@ export const accordionItems : any = [
       content: [
         {
           label: "Liste des Adhérents",
-          route: "liste-adherent",
+          route: "/liste-adherent",
         },
         {
           label: "Ajouter un adhérent",
-          route: "adherent",
+          route: "/adherent",
         },
       ],
     },
@@ -94,11 +94,11 @@ export const accordionItems : any = [
       content: [
         {
           label: "Liste des automobiles",
-          route: "liste-automobile",
+          route: "/liste-automobile",
         },
         {
           label: "Ajouter un Automobile",
-          route: "automobile",
+          route: "/automobile",
         },
       ],
     },

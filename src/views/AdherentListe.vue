@@ -20,7 +20,7 @@
             <Search class="size-6 text-muted-foreground" />
           </span>
         </div>
-        <router-link to="adherent" class="w-[20rem]">
+        <router-link to="/adherent" class="w-[20rem]">
           <Button class="w-full bg-bg-primary">Ajouter un adhérent</Button>
         </router-link>
       </div>
@@ -64,6 +64,8 @@ import Table from "../components/table.vue";
 import { useAdherent } from "@/stores/adherent";
 import { type Proprietaire } from "@/model/proprietaire";
 import updateAdherent from "../components/updateAdherent.vue";
+import { useRoute } from "vue-router";
+import router from "@/router";
 
 const pageSizeOptions = ref(["5", "10", "20", "50"]);
 const pageSize = ref(5);
@@ -90,9 +92,29 @@ const handleUpdate = (value: any) => {
   open.value = value;
 };
 
+const emits = defineEmits(["notification"]);
+
+const notification = (data: any) => {
+  emits("notification", data);
+};
+
+const route = useRoute();
+
 const Update = (data: any) => {
-  open.value = true;
-  sessionStorage.setItem("update", JSON.stringify(data));
+  if (route.path == "/nouvelle-souscription") {
+    localStorage.setItem("adherent", JSON.stringify(data));
+    router.push({ path: "/automobile/" + data.IDProprietaire });
+  } else if (route.path != "/nouvelle-souscription/renouvelement-contrat") {
+    open.value = true;
+    sessionStorage.setItem("update", JSON.stringify(data));
+  } else {
+    sessionStorage.setItem("propretaire", JSON.stringify(data.IDProprietaire));
+    const storageData = sessionStorage.getItem("propretaire");
+    if (storageData !== null) {
+      const parsedData = JSON.parse(storageData);
+      notification(parsedData);
+    }
+  }
 };
 
 const getPropietaire = useAdherent();

@@ -54,17 +54,10 @@
       </CardFooter>
     </Card>
 
-    <Dialog :open="modal">
-      <DialogContent class="sm:max-w-[30rem]">
+    <Dialog v-model:open="modal">
+      <DialogContent class="sm:min-w-[30rem]">
         <DialogHeader>
           <DialogTitle>Le login ou le mot de passe est incorrect. </DialogTitle>
-          <div
-            class="absolute hover:bg-bg-primary px-3 py-1 hover:text-white hover:rounded-full right-4 top-4 rounded-sm transition-opacity cursor-pointer"
-            @click="ActionModal1"
-          >
-            <span>X</span>
-          </div>
-
           <div class="flex justify-start mt-5">
             <Button @click="ActionModal1" class="w-[8rem] bg-bg-primary"
               >OK</Button

@@ -6,6 +6,13 @@ import Adherent from '@/views/Adherent.vue'
 import Automobile from '@/views/Automobile.vue';
 import ListeAutomobile from "@/views/AutomobileListe.vue"
 import ListeAdherent from "@/views/AdherentListe.vue"
+import Saisie from "@/views/Saisie.vue"
+import Souscription from "@/views/Souscription.vue"
+import renouvelementContrat from '@/views/renouvelement-contrat.vue';
+import Amortissement from '@/views/Amortissement.vue';
+import listeSouscription from '@/views/listeSouscription.vue';
+import detailSouscription from '@/views/detailSouscription.vue';
+import Commande from '@/views/Commande.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,7 +58,49 @@ const router = createRouter({
       name: 'liste-adherent', // Nom de la route
       component: ListeAdherent, // Composant lié à la route
       meta: { requiresAuth: true },
-    }
+    },
+    {
+      path: '/saisie',
+      name: 'saisie',
+      component: Saisie,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/nouvelle-souscription',
+      name: 'nouvelle-souscription',
+      component: Souscription,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/nouvelle-souscription/renouvelement-contrat',
+      name: 'nouvelle-souscription/renouvelement-contrat',
+      component: renouvelementContrat,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/amortissement',
+      name: 'amortissement', 
+      component: Amortissement, 
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/liste-souscription',
+      name: 'liste-souscription', 
+      component: listeSouscription, 
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/details-souscription',
+      name: 'details-souscription', 
+      component: detailSouscription, 
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/commande',
+      name: 'commande', 
+      component: Commande, 
+      meta: { requiresAuth: true }
+    },
   ]
 })
 

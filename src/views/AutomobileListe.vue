@@ -1,69 +1,77 @@
 <template>
-  <Card class="w-full shadow-md bg-[#73B1E7] rounded-xl">
-    <div class="w-full h-[2rem] select-none flex justify-center items-center">
-      <h1 class="font-[600] text-white text-[1.3rem]">Liste des automobiles</h1>
-    </div>
-    <CardContent class="bg-white">
-      <div class="pt-5 flex flex-row space-x-5 justify-between">
-        <div class="relative w-full max-w-sm items-center">
-          <Input
-            id="search"
-            type="text"
-            v-model="searchService"
-            @input="filterAutomible"
-            placeholder="Rechercher par ici"
-            class="pl-10"
-          />
-          <span
-            class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
-          >
-            <Search class="size-6 text-muted-foreground" />
-          </span>
+  <div
+    :class="{
+      'mt-5': $route.path === '/nouvelle-souscription/renouvelement-contrat',
+    }"
+  >
+    <Card class="w-full shadow-md bg-[#73B1E7] rounded-xl">
+      <div class="w-full h-[2rem] select-none flex justify-center items-center">
+        <h1 class="font-[600] text-white text-[1.3rem]">
+          Liste des automobiles
+        </h1>
+      </div>
+      <CardContent class="bg-white">
+        <div class="pt-5 flex flex-row space-x-5 justify-between">
+          <div class="relative w-full max-w-sm items-center">
+            <Input
+              id="search"
+              type="text"
+              v-model="searchService"
+              @input="filterAutomible"
+              placeholder="Rechercher par ici"
+              class="pl-10"
+            />
+            <span
+              class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
+            >
+              <Search class="size-6 text-muted-foreground" />
+            </span>
+          </div>
+          <div class="w-[20rem]">
+            <Dialog v-model:open="openFiltre">
+              <DialogTrigger as-child>
+                <Button class="w-full bg-bg-primary">Recherche avancée</Button>
+              </DialogTrigger>
+              <DialogContent class="min-w-[45rem]">
+                <DialogHeader>
+                  <DialogTitle class="mt-[-.3rem]">Filtre avancé</DialogTitle>
+                  <SeachAutomobile @seachData="FilterValue" />
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          </div>
+          <router-link to="/automobile" class="w-[20rem]">
+            <Button class="w-full bg-bg-primary">Ajouter un automobile</Button>
+          </router-link>
         </div>
-        <div class="w-[20rem]">
-          <Dialog v-model:open="openFiltre">
-            <DialogTrigger as-child>
-              <Button class="w-full bg-bg-primary">Recherche avancée</Button>
-            </DialogTrigger>
-            <DialogContent class="min-w-[45rem]">
-              <DialogHeader>
-                <DialogTitle class="mt-[-.3rem]">Filtre avancé</DialogTitle>
-                <SeachAutomobile @seachData="FilterValue" />
-              </DialogHeader>
-            </DialogContent>
+        <div>
+          <Dialog v-if="open" v-model:open="open">
+            <updateAutomobile
+              @RefrehFunction="fetchAutomobile"
+              @updateopenUpdate="handleUpdate"
+            />
           </Dialog>
+          <Dialog v-if="deleteOpen" v-model:open="deleteOpen">
+            <deleteAutomobile
+              @updateopenDelete="handleUpdateOpenDelete"
+              @RefrehFunction="fetchAutomobile"
+            />
+          </Dialog>
+          <Table
+            :columns="columns"
+            :visibleProduit="visibleProduit"
+            :pageSize="pageSize"
+            :pageSizeOptions="pageSizeOptions"
+            :handleChangePageSize="handleChangePageSize"
+            :paginationText="paginationText"
+            :chargement="chargement"
+            @updateFunction="Update"
+            @deleteFunction="toggleOpenDelete"
+          />
         </div>
-        <router-link to="/automobile" class="w-[20rem]">
-          <Button class="w-full bg-bg-primary">Ajouter un automobile</Button>
-        </router-link>
-      </div>
-      <div>
-        <Dialog v-if="open" v-model:open="open">
-          <updateAutomobile
-            @RefrehFunction="fetchAutomobile"
-            @updateopenUpdate="handleUpdate"
-          />
-        </Dialog>
-        <Dialog v-if="deleteOpen" v-model:open="deleteOpen">
-          <deleteAutomobile
-            @updateopenDelete="handleUpdateOpenDelete"
-            @RefrehFunction="fetchAutomobile"
-          />
-        </Dialog>
-        <Table
-          :columns="columns"
-          :visibleProduit="visibleProduit"
-          :pageSize="pageSize"
-          :pageSizeOptions="pageSizeOptions"
-          :handleChangePageSize="handleChangePageSize"
-          :paginationText="paginationText"
-          :chargement="chargement"
-          @updateFunction="Update"
-          @deleteFunction="toggleOpenDelete"
-        />
-      </div>
-    </CardContent>
-  </Card>
+      </CardContent>
+    </Card>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -81,6 +89,8 @@ import updateAutomobile from "../components/updateAutomobile.vue";
 import type { Automobile } from "@/model/automobile";
 import SeachAutomobile from "../components/SeachAutomobile.vue";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { useRoute } from "vue-router";
+import router from "@/router";
 
 const pageSizeOptions = ref(["5", "10", "20", "50"]);
 const pageSize = ref(5);
@@ -107,9 +117,30 @@ const handleUpdate = (value: any) => {
   open.value = value;
 };
 
+const route = useRoute();
+
+const emits = defineEmits(["notification"]);
+
+const notification = (data: any) => {
+  emits("notification", data);
+};
+
 const Update = (data: any) => {
-  open.value = true;
-  sessionStorage.setItem("updateAutomobile", JSON.stringify(data));
+  if (
+    route.path != "/nouvelle-souscription/renouvelement-contrat" &&
+    route.path != "/amortissement"
+  ) {
+    open.value = true;
+    sessionStorage.setItem("updateAutomobile", JSON.stringify(data));
+  } else {
+    sessionStorage.setItem("amortissement", JSON.stringify(data));
+    const storageData = sessionStorage.getItem("amortissement");
+    if (storageData !== null) {
+      const parsedData = JSON.parse(storageData);
+      notification(parsedData);
+    }
+    router.push({ path: "/amortissement" });
+  }
 };
 
 const openFiltre = ref(false);
@@ -149,7 +180,10 @@ const fetchAutomobile = async () => {
   }
 };
 
+const { LePropretaire } = defineProps(["LePropretaire"]);
+
 const FilterValue = async (values: any) => {
+  console.log(values);
   try {
     await getAutomobile.fetchAutomobile(values);
     automobile.value = getAutomobile.automobile;
@@ -163,7 +197,28 @@ const FilterValue = async (values: any) => {
 
 const searchService = ref("");
 
-onMounted(fetchAutomobile);
+onMounted(() => {
+  if (
+    LePropretaire &&
+    route.path == "/nouvelle-souscription/renouvelement-contrat"
+  ) {
+    alert(LePropretaire);
+    const FilterVa = async (values: any) => {
+      try {
+        await getAutomobile.fetchAutomobile(values);
+        automobile.value = getAutomobile.automobile;
+        filterAutomible();
+        openFiltre.value = false;
+        chargement.value = false;
+      } catch (error) {
+        console.error((error as any).response?.data?.message);
+      }
+    };
+    FilterVa({ IDProprietaire: LePropretaire });
+  } else {
+    fetchAutomobile();
+  }
+});
 
 function filterAutomible() {
   visibleProduit.value = automobile.value.filter((automobile) => {

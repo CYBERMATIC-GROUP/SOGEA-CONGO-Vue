@@ -48,6 +48,7 @@ declare module 'vue' {
     InputForm: typeof import('./src/components/inputForm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SaveAmortissement: typeof import('./src/components/saveAmortissement.vue')['default']
     SeachAutomobile: typeof import('./src/components/SeachAutomobile.vue')['default']
     SideBar: typeof import('./src/components/SideBar.vue')['default']
     Table: typeof import('./src/components/table.vue')['default']

@@ -3,7 +3,10 @@
     <div>
       <label
         :for="id"
-        class="mb-1 block text-sm font-medium text-gray-700 after:ml-0.5 after:text-red-500 after:content-['*']"
+        :class="[
+          'mb-1 block text-sm font-medium text-gray-700 after:ml-0.5 after:text-red-500',
+          !cacher ? 'after:content-[\'*\']' : '',
+        ]"
         >{{ label }}</label
       >
       <input
@@ -65,6 +68,7 @@ const {
   modelValue,
   valid,
   uppercase,
+  cacher,
 } = defineProps([
   "id",
   "placeholder",
@@ -74,9 +78,10 @@ const {
   "type",
   "options",
   "imageSrc",
+  "readonly",
   "modelValue",
   "valid",
   "uppercase",
-  "readonly",
+  "cacher",
 ]);
 </script>

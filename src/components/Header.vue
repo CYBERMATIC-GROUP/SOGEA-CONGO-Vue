@@ -4,6 +4,7 @@ import { List, Search, Bell, User } from "lucide-vue-next";
 import Logo from "../assets/img/sogea.jpg";
 import Avatar from "primevue/avatar";
 import { ref } from "vue";
+import profile from "@/assets/img/profile.png";
 import {
   MenubarContent,
   MenubarItem,
@@ -69,11 +70,7 @@ if (storageAdherentString !== null) {
               <MenubarRoot v-model="currentMenu">
                 <MenubarMenu value="file">
                   <MenubarTrigger class="flex flex-row items-center space-x-1">
-                    <Avatar
-                      image="http://umngflu.cluster031.hosting.ovh.net/assets/images/avatars/profile-image.png"
-                      class="mr-2 w-10"
-                      shape="circle"
-                    />
+                    <Avatar :image="profile" class="mr-2 w-10" shape="circle" />
                     <div class="flex flex-col items-start">
                       <span class="text-[.8rem] font-[300]"
                         >Agent
