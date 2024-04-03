@@ -42,6 +42,22 @@
           </p>
         </template>
 
+        <template
+          v-if="column.key === 'DateFin' && $route.path == '/liste-objectif'"
+        >
+          <p>
+            {{ convertirDateEnFrancais(record.DateFin) }}
+          </p>
+        </template>
+
+        <template
+          v-if="column.key === 'DateDebut' && $route.path == '/liste-objectif'"
+        >
+          <p>
+            {{ convertirDateEnFrancais(record.DateDebut) }}
+          </p>
+        </template>
+
         <template v-if="column.key === columns[columns.length - 1].key">
           <div class="flex flex-row justify-between items-center">
             <span

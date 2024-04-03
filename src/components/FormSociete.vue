@@ -273,6 +273,7 @@ import { getSuccess, getError } from "../common/notification";
 import router from "@/router";
 import { useSociete } from "@/stores/societe";
 import { defineEmits } from "vue";
+import profileImg from "../assets/img/profile.png";
 
 const { errors, handleSubmit, defineField } = useForm({
   validationSchema: yup.object({
@@ -333,9 +334,7 @@ const [RemiseEnPourcentage, RemiseEnPourcentageAttrs] = defineField(
 const [Status, StatusAttrs] = defineField("Status");
 const [CodeSociete, CodeSocieteAttrs] = defineField("CodeSociete");
 
-const previewImg = ref(
-  "https://lh3.googleusercontent.com/a-/AFdZucpC_6WFBIfaAbPHBwGM9z8SxyM1oV4wB4Ngwp_UyQ=s96-c"
-);
+const previewImg = ref(profileImg);
 
 const previewImgData = ref<string>("");
 
@@ -431,10 +430,7 @@ const onSubmit = !values
     });
 
 if (values !== undefined) {
-  previewImg.value =
-    values.Logo == ""
-      ? "https://lh3.googleusercontent.com/a-/AFdZucpC_6WFBIfaAbPHBwGM9z8SxyM1oV4wB4Ngwp_UyQ=s96-c"
-      : values.Logo;
+  previewImg.value = values.Logo == "" ? profileImg : values.Logo;
   IDDEPARTEMENT.value = values.IDDEPARTEMENT;
   NomSociete.value = values.NomSociete;
   Adresse.value = values.Adresse;

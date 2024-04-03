@@ -28,7 +28,7 @@
       />
       <div
         v-if="showOptions && options.length > 1"
-        class="absolute z-50 bg-white border border-gray-300 mt-1 w-full rounded-lg shadow-lg"
+        class="absolute z-50 bg-white border border-gray-300 mt-1 w-full rounded-lg shadow-lg h-[11rem] overflow-scroll overflow-x-hidden scrollbar-thin"
       >
         <div
           v-for="option in options"
@@ -81,7 +81,7 @@ const selectedValue = ref(modelValue);
 const emitUpdateModelValue = defineEmits(["update:modelValue"]);
 
 function selectOption(option: any) {
-  selectedValue.value = option.value;
+  selectedValue.value = option.label;
   showOptions.value = false;
   // Émettre l'événement pour mettre à jour le modèle
   emitUpdateModelValue("update:modelValue", option.value);

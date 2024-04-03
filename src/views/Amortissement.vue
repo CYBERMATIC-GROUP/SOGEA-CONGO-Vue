@@ -160,7 +160,7 @@
         </h1>
       </div>
 
-      <div class="px-4 mt-2" v-if="tabAmmortissement.length > 1">
+      <div class="px-4 mt-2" v-if="tabAmmortissement.length > 0">
         <div class="relative overflow-x-auto">
           <table
             class="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400"
@@ -238,6 +238,18 @@
         </div>
       </div>
 
+      <div v-if="loadingData">
+        <!-- <a-spin /> -->
+        <div
+          class="fixed w-screen min-h-[100vh] backdrop-blur-sm bg-white/30 top-[50%] left-[50%]"
+          style="transform: translate(-40%, -40%)"
+        >
+          <div class="w-screen h-screen flex items-center justify-center">
+            <a-spin />
+          </div>
+        </div>
+      </div>
+
       <div class="flex flex-row justify-between px-4 mt-5 space-x-5">
         <Button
           @click="toogleSouscription"
@@ -304,6 +316,7 @@ import { useAutomobile } from "@/stores/automobile";
 const data = ref();
 const open = ref(false);
 const openAutomobile = ref(false);
+const loadingData = ref(false);
 
 const toogleAutomobile = () => {
   openAutomobile.value = true;
@@ -343,6 +356,7 @@ const pdf = ref();
 
 const toggleInput = async () => {
   chargement.value = true;
+  loadingData.value = true;
   let dateStringSansTirets = date.value.replace(/-/g, "");
   const donne = {
     nIDProduit: data.value.IDProduit,
@@ -360,12 +374,15 @@ const toggleInput = async () => {
     );
     console.log(response);
     chargement.value = false;
+    loadingData.value = false;
     tabAmmortissement.value = response.XECHEANCIER_MENSUEL;
     parametre.value = response.ParametreGeneral;
     console.log(response.sEtat);
     pdf.value = response.sEtat;
     console.log(parametre.value);
   } catch (error) {
+    loadingData.value = false;
+    getError((error as any).response?.data?.fault?.detail);
     console.log(error);
   }
 };
@@ -506,7 +523,7 @@ const notification = (donne: any) => {
 watch(data, (newValue, oldValue) => {
   data.value = newValue;
   console.log(data.value);
-  toggleInput();
+  // toggleInput();
 });
 
 const getAutomobile = useAutomobile();

@@ -5,7 +5,7 @@ const EndPoint = "/sogeacongo/v1/Quartier"
 
 export const useQuartier = defineStore('quartier', {
     state: () => ({
-        quartier: {} as Quartier,
+        quartier: [] as Quartier[],
       }),
   actions: {
     async fetchQuartier() {

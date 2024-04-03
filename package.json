@@ -12,6 +12,7 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
+    "@preline/select": "^2.0.2",
     "@vueuse/core": "^10.9.0",
     "ant-design-vue": "^4.1.2",
     "axios": "^1.6.7",

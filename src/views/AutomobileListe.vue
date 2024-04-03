@@ -202,7 +202,6 @@ onMounted(() => {
     LePropretaire &&
     route.path == "/nouvelle-souscription/renouvelement-contrat"
   ) {
-    alert(LePropretaire);
     const FilterVa = async (values: any) => {
       try {
         await getAutomobile.fetchAutomobile(values);

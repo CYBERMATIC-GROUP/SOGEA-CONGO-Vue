@@ -17,6 +17,11 @@ import imprimer from '@/views/imprimer.vue';
 import Consultation from '@/views/Consultation.vue';
 import SocieteListe from '@/views/SocieteListe.vue';
 import Societe from '@/views/Societe.vue';
+import ObjectifListe from '@/views/ObjectifListe.vue';
+import RevenusListe from '@/views/RevenusListe.vue';
+import StationListe from '@/views/StationListe.vue';
+import PointDeVenteListe from '@/views/PointDeVenteListe.vue';
+import AgentListe from '@/views/AgentListe.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -127,6 +132,36 @@ const router = createRouter({
       path: '/societe',
       name: 'societe', 
       component: Societe, 
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/liste-objectif',
+      name: 'liste-objectif', 
+      component: ObjectifListe, 
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/revenus',
+      name: 'revenus', 
+      component: RevenusListe, 
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/liste-station',
+      name: 'liste-station', 
+      component: StationListe, 
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/liste-point-vente',
+      name: 'liste-point-vente', 
+      component: PointDeVenteListe, 
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/liste-agent',
+      name: 'liste-agent', 
+      component: AgentListe, 
       meta: { requiresAuth: true }
     },
   ]

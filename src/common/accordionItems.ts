@@ -68,11 +68,11 @@ export const accordionItems : any = [
       content: [
         {
           label: "Objectifs",
-          route: "#",
+          route: "/liste-objectif",
         },
         {
           label: "Revenus",
-          route: "#",
+          route: "/revenus",
         },
       ],
     },
@@ -83,7 +83,7 @@ export const accordionItems : any = [
       content: [
         {
           label: "Liste des Stations",
-          route: "#",
+          route: "/liste-station",
         },
       ],
     },
@@ -109,7 +109,7 @@ export const accordionItems : any = [
       content: [
         {
           label: "Liste des points ventes",
-          route: "#",
+          route: "/liste-point-vente",
         },
       ],
     },
@@ -120,7 +120,7 @@ export const accordionItems : any = [
       content: [
         {
           label: "Liste des utilisateurs",
-          route: "#",
+          route: "/liste-agent",
         },
       ],
     },

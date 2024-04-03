@@ -9,10 +9,10 @@ import SideBar from "./components/SideBar.vue";
     <div class="h-[4.313rem]"><Header /></div>
 
     <div class="flex flex-row mt-10">
-      <div class="mx-6 w-[18rem] h-full pb-32 fixed">
+      <div class="mx-6 w-[18rem] h-full pb-32 fixed z-20">
         <SideBar />
       </div>
-      <div class="flex-1 ml-[20rem] me-[1.7rem]">
+      <div class="flex-1 ml-[20rem] me-[1.7rem] z-10">
         <RouterView />
       </div>
     </div>

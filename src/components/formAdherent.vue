@@ -364,10 +364,12 @@ watch(IDARRONDISSEMENT, async (newValue, oldValue) => {
   try {
     let response = await getArrondissement.fetchRessource(data, "Quartier");
     console.log(response);
-    optionsQuartier.value = response.map((item: { NomQuartier: any }) => ({
-      value: item.NomQuartier,
-      label: item.NomQuartier,
-    }));
+    optionsQuartier.value = response.map(
+      (item: { IDQUARTIER: number; NomQuartier: any }) => ({
+        value: item.IDQUARTIER,
+        label: item.NomQuartier,
+      })
+    );
   } catch (error) {
     console.error(error);
   }

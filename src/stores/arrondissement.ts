@@ -5,7 +5,7 @@ const EndPoint = "/sogeacongo/v1/Arrondissement"
 
 export const useArrondissement = defineStore('arrondissement', {
     state: () => ({
-        arrondissement: {} as Arrondissement,
+        arrondissement: [] as Arrondissement[],
       }),
   actions: {
     async fetchArrondissement() {

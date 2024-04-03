@@ -31,7 +31,6 @@
         ]"
         :placeholder="placeholder"
       />
-
       <select
         v-else
         :value="modelValue"
@@ -41,7 +40,7 @@
         "
         :id="id"
         :class="[
-          'block  outline-none border px-2 py-1 w-full rounded-md  shadow-sm disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500',
+          'block   outline-none border px-2 py-1 w-full rounded-md  shadow-sm disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500',
           valid
             ? 'border-red-color focus:border-red-color'
             : 'border-[#737272] focus:border-bg-secondary',

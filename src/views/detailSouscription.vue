@@ -125,7 +125,7 @@
         Résumé des écheances
       </h1>
       <div>
-        <div class="px-4 mt-2" v-if="tabAmmortissement.length > 1">
+        <div class="px-4 mt-2" v-if="tabAmmortissement.length > 0">
           <div class="relative overflow-x-auto">
             <table
               class="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400"
