@@ -6,61 +6,61 @@
     <CardContent class="bg-white pt-6">
       <div class="flex flex-row space-x-3 px-5">
         <div class="w-[50%]">
-          <div class="border flex flex-col space-y-3 py-2">
-            <span class="flex flex-row justify-between px-4 items-center">
+          <div class="border grid grid-cols-1 divide-y-2">
+            <span class="flex flex-row justify-between px-4 items-center py-1">
               <p>Immatriculation</p>
               <p class="text-black">: {{ data?.Immatriculation }}</p>
             </span>
-            <span class="flex flex-row justify-between px-4 items-center">
+            <span class="flex flex-row justify-between px-4 items-center py-1">
               <p>Proprietaire</p>
               <p class="text-black">: {{ data?.Proprietaire }}</p>
             </span>
-            <span class="flex flex-row justify-between px-4 items-center">
+            <span class="flex flex-row justify-between px-4 items-center py-1">
               <p>Date de souscription</p>
               <p class="text-black">:{{ data?.DateDebut }}</p>
             </span>
-            <span class="flex flex-row justify-between px-4 items-center">
+            <span class="flex flex-row justify-between px-4 items-center py-1">
               <p>Montant du prêt</p>
               <p class="text-black">
                 : {{ formatNumber(Number(data?.MontantTotal)) }} XAF
               </p>
             </span>
-            <span class="flex flex-row justify-between px-4 items-center">
+            <span class="flex flex-row justify-between px-4 items-center py-1">
               <p>Taux d'intérêt</p>
               <p class="text-black">:{{ data?.TauxInteret }} %</p>
             </span>
-            <span class="flex flex-row justify-between px-4 items-center">
+            <span class="flex flex-row justify-between px-4 items-center py-1">
               <p>Intérêt</p>
               <p class="text-black">
                 : {{ formatNumber(Number(data?.CoutPret)) }} XAF
               </p>
             </span>
-            <span class="flex flex-row justify-between px-4 items-center">
+            <span class="flex flex-row justify-between px-4 items-center py-1">
               <p>Montant total</p>
               <p class="text-black">
                 : {{ formatNumber(Number(data?.CapitalInteret)) }} XAF
               </p>
             </span>
-            <span class="flex flex-row justify-between px-4 items-center">
+            <span class="flex flex-row justify-between px-4 items-center py-1">
               <p>Durée du prêt</p>
               <p class="text-black">: {{ data?.DureePret }}</p>
             </span>
           </div>
         </div>
         <div class="w-[50%]">
-          <div class="border flex flex-col space-y-3 py-2">
-            <span class="flex flex-row justify-between px-4 items-center">
+          <div class="border grid grid-cols-1 divide-y-2">
+            <span class="flex flex-row justify-between px-4 items-center py-1">
               <p>Mensualité</p>
               <p class="text-black">
                 : {{ formatNumber(Number(data?.Mensualite)) }} XAF
               </p>
             </span>
-            <span class="flex flex-row justify-between px-4 items-center">
+            <span class="flex flex-row justify-between px-4 items-center py-1">
               <p>Duree en année</p>
               <p class="text-black">: {{ data?.DureeEnAnnee }}</p>
             </span>
 
-            <span class="flex flex-row justify-between px-4 items-center">
+            <span class="flex flex-row justify-between px-4 items-center py-1">
               <p>
                 Commision <br />
                 courtier/jour
@@ -70,7 +70,7 @@
                 XAF
               </p>
             </span>
-            <span class="flex flex-row justify-between px-4 items-center">
+            <span class="flex flex-row justify-between px-4 items-center py-1">
               <p>
                 Commision <br />
                 courtier/an
@@ -80,15 +80,15 @@
                 {{ formatNumber(Number(data?.Commiss_Courtier_Anneulle)) }} XAF
               </p>
             </span>
-            <span class="flex flex-row justify-between px-4 items-center">
+            <span class="flex flex-row justify-between px-4 items-center py-1">
               <p>Date début</p>
               <p class="text-black">: {{ convertirDate(data?.DateDebut) }}</p>
             </span>
-            <span class="flex flex-row justify-between px-4 items-center">
+            <span class="flex flex-row justify-between px-4 items-center py-1">
               <p>Date fin</p>
               <p class="text-black">: {{ convertirDate(data?.DateFin) }}</p>
             </span>
-            <span class="flex flex-row justify-between px-4 items-center">
+            <span class="flex flex-row justify-between px-4 items-center py-1">
               <p>QCM</p>
               <p class="text-black">
                 : {{ formatNumber(Number(data?.QCM)) }} XAF

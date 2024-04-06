@@ -3,7 +3,7 @@ import { Card, CardHeader } from "@/components/ui/card";
 import { List, Search, Bell, User } from "lucide-vue-next";
 import Logo from "../assets/img/sogea.jpg";
 import Avatar from "primevue/avatar";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import profile from "@/assets/img/profile.png";
 import {
   MenubarContent,
@@ -15,8 +15,22 @@ import {
 } from "radix-vue";
 import { menu } from "@/common/menu";
 import router from "@/router";
+import { useMenu } from "@/stores/menu";
 
 const currentMenu = ref("");
+
+const getMenu = useMenu();
+const menuActive = ref(true);
+
+onMounted(() => {
+  menuActive.value = getMenu.menu;
+});
+
+const Active = () => {
+  menuActive.value = !menuActive.value;
+  getMenu.setMenu(menuActive.value);
+  console.log(getMenu.menu);
+};
 
 const handleMenuItemClick = (item: any) => {
   if (item.text == "Déconnexion") {
@@ -41,15 +55,20 @@ if (storageAdherentString !== null) {
 
 <template>
   <div
-    style="z-index: 40"
-    class="fixed top-0 left-[1.5rem] right-[1.5rem] backdrop-filter backdrop-blur-lg"
+    class="fixed z-50 top-0 left-[1.5rem] right-[1.5rem] backdrop-filter backdrop-blur-lg"
   >
     <Card class="mt-5 rounded-xl">
       <CardHeader
         class="select-none h-[4.313rem] flex flex-row justify-between items-center"
       >
         <div class="flex flex-row items-center space-x-5">
-          <List />
+          <List
+            @click="Active"
+            :class="[
+              `cursor-pointer hover:text-blue-500 transition-all duration-500`,
+              menuActive ? '' : 'rotate-180',
+            ]"
+          />
           <span
             class="hover:bg-[#F3F6F9] font-[500] py-2 px-4 rounded-lg hover:text-blue-500 cursor-pointer"
             ><a href="#">Accueil</a></span

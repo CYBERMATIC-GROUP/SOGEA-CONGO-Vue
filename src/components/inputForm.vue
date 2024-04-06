@@ -46,7 +46,7 @@
             : 'border-[#737272] focus:border-bg-secondary',
         ]"
       >
-        <option value="">{{ labelDefaut }}</option>
+        <option value="" :disabled="disabled">{{ labelDefaut }}</option>
         <option v-for="opt in options" :key="opt.value" :value="opt.value">
           {{ opt.label }}
         </option>
@@ -62,6 +62,7 @@ const {
   labelDefaut,
   label,
   inputType,
+  disabled,
   type,
   options,
   imageSrc,
@@ -77,6 +78,7 @@ const {
   "label",
   "inputType",
   "type",
+  "disabled",
   "options",
   "imageSrc",
   "readonly",

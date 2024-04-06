@@ -1,56 +1,64 @@
 <template>
-  <Card class="w-full shadow-md bg-[#73B1E7] rounded-xl">
-    <div class="w-full h-[2rem] select-none flex justify-center items-center">
-      <h1 class="font-[600] text-white text-[1.3rem]">Liste des Adhérents</h1>
-    </div>
-    <CardContent class="bg-white">
-      <div class="pt-5 flex flex-row space-x-5 justify-between">
-        <div class="relative w-full max-w-sm items-center">
-          <Input
-            id="search"
-            type="text"
-            v-model="searchService"
-            @input="filterProprietaire"
-            placeholder="Rechercher par ici"
-            class="pl-10"
-          />
-          <span
-            class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
-          >
-            <Search class="size-6 text-muted-foreground" />
-          </span>
+  <div
+    :class="{
+      'mt-5':
+        $route.path === '/nouvelle-souscription/renouvelement-contrat' ||
+        $route.path === '/nouvelle-souscription',
+    }"
+  >
+    <Card class="w-full shadow-md bg-[#73B1E7] rounded-xl">
+      <div class="w-full h-[2rem] select-none flex justify-center items-center">
+        <h1 class="font-[600] text-white text-[1.3rem]">Liste des Adhérents</h1>
+      </div>
+      <CardContent class="bg-white">
+        <div class="pt-5 flex flex-row space-x-5 justify-between">
+          <div class="relative w-full max-w-sm items-center">
+            <Input
+              id="search"
+              type="text"
+              v-model="searchService"
+              @input="filterProprietaire"
+              placeholder="Rechercher par ici"
+              class="pl-10"
+            />
+            <span
+              class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
+            >
+              <Search class="size-6 text-muted-foreground" />
+            </span>
+          </div>
+          <router-link to="/adherent" class="w-[20rem]">
+            <Button class="w-full bg-bg-primary">Ajouter un adhérent</Button>
+          </router-link>
         </div>
-        <router-link to="/adherent" class="w-[20rem]">
-          <Button class="w-full bg-bg-primary">Ajouter un adhérent</Button>
-        </router-link>
-      </div>
-      <div>
-        <Dialog v-if="open" v-model:open="open">
-          <updateAdherent
-            @RefrehFunction="fetchProprietaire"
-            @updateopenUpdate="handleUpdate"
+        <div>
+          <Dialog v-if="open" v-model:open="open">
+            <updateAdherent
+              @RefrehFunction="fetchProprietaire"
+              @updateopenUpdate="handleUpdate"
+            />
+          </Dialog>
+          <Dialog v-if="deleteOpen" v-model:open="deleteOpen">
+            <deleteAdherent
+              @updateopenDelete="handleUpdateOpenDelete"
+              @RefrehFunction="fetchProprietaire"
+            />
+          </Dialog>
+          <Table
+            :columns="columns"
+            :visibleProduit="visibleProduit"
+            :pageSize="pageSize"
+            :pageSizeOptions="pageSizeOptions"
+            :handleChangePageSize="handleChangePageSize"
+            :paginationText="paginationText"
+            :chargement="chargement"
+            @updateFunction="Update"
+            @deleteFunction="toggleOpenDelete"
           />
-        </Dialog>
-        <Dialog v-if="deleteOpen" v-model:open="deleteOpen">
-          <deleteAdherent
-            @updateopenDelete="handleUpdateOpenDelete"
-            @RefrehFunction="fetchProprietaire"
-          />
-        </Dialog>
-        <Table
-          :columns="columns"
-          :visibleProduit="visibleProduit"
-          :pageSize="pageSize"
-          :pageSizeOptions="pageSizeOptions"
-          :handleChangePageSize="handleChangePageSize"
-          :paginationText="paginationText"
-          :chargement="chargement"
-          @updateFunction="Update"
-          @deleteFunction="toggleOpenDelete"
-        />
-      </div>
-    </CardContent>
-  </Card>
+        </div>
+      </CardContent>
+    </Card>
+  </div>
 </template>
 
 <script setup lang="ts">

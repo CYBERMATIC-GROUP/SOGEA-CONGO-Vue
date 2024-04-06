@@ -42,6 +42,12 @@
           </p>
         </template>
 
+        <template v-if="column.key === 'DateHeure'">
+          <p>
+            {{ convertirDateEnFrancaisHeure(record.DateHeure) }}
+          </p>
+        </template>
+
         <template
           v-if="column.key === 'DateFin' && $route.path == '/liste-objectif'"
         >
@@ -72,13 +78,29 @@
               {{ record[columns[columns.length - 1].key] }}
             </span>
             <span>
-              <DropdownMenu>
+              <DropdownMenu
+                v-if="
+                  $route.path != '/consultation-compte' &&
+                  $route.path != '/consultation-caisse'
+                "
+              >
                 <DropdownMenuTrigger as-child>
                   <button>
                     <i class="fa-solid fa-ellipsis-vertical me-5"></i>
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent class="w-56 me-[5rem]">
+                <DropdownMenuContent
+                  :class="[
+                    'w-56',
+                    'me-[5rem]',
+                    $route.path ===
+                      '/nouvelle-souscription/renouvelement-contrat' ||
+                    $route.path === '/amortissement' ||
+                    $route.path === '/nouvelle-souscription'
+                      ? 'me-[8.4rem]'
+                      : '',
+                  ]"
+                >
                   <DropdownMenuCheckboxItem
                     @click="toggleOpenDelete(record)"
                     v-if="
@@ -160,6 +182,21 @@ function convertirDateEnFrancais(dateString: string): string {
     day: "numeric",
     month: "long",
     year: "numeric",
+  };
+
+  return date.toLocaleDateString("fr-FR", options);
+}
+
+function convertirDateEnFrancaisHeure(dateString: any) {
+  const date = new Date(dateString);
+  const options: any = {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    hour12: false, // Format 24 heures
   };
 
   return date.toLocaleDateString("fr-FR", options);

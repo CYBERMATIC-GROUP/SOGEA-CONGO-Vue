@@ -52,12 +52,12 @@ export const accordionItems : any = [
       icon: Landmark,
       content: [
         {
-          label: "Historique comptes",
-          route: "#",
+          label: "Consultation de compte",
+          route: "/consultation-compte",
         },
         {
-          label: "Historique caisses",
-          route: "#",
+          label: "Consultation de caisse",
+          route: "/consultation-caisse",
         },
       ],
     },

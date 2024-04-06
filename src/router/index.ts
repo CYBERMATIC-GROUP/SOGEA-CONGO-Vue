@@ -1,15 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore';
-import HomeView from '../views/HomeView.vue'
-import Connexion from "../views/Connexion.vue"
-import Adherent from '@/views/Adherent.vue'
-import Automobile from '@/views/Automobile.vue';
-import ListeAutomobile from "@/views/AutomobileListe.vue"
-import ListeAdherent from "@/views/AdherentListe.vue"
-import Saisie from "@/views/Saisie.vue"
-import Souscription from "@/views/Souscription.vue"
-import renouvelementContrat from '@/views/renouvelement-contrat.vue';
-import Amortissement from '@/views/Amortissement.vue';
 import listeSouscription from '@/views/listeSouscription.vue';
 import detailSouscription from '@/views/detailSouscription.vue';
 import Commande from '@/views/Commande.vue';
@@ -22,6 +12,8 @@ import RevenusListe from '@/views/RevenusListe.vue';
 import StationListe from '@/views/StationListe.vue';
 import PointDeVenteListe from '@/views/PointDeVenteListe.vue';
 import AgentListe from '@/views/AgentListe.vue';
+import ConsultationCompte from '@/views/ConsultationCompte.vue';
+import ConsultationCaisse from '@/views/ConsultationCaisse.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,141 +21,152 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: () => import('../views/HomeView.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/connexion',
       name: 'connexion',
-      component: Connexion,
+      component: () => import('../views/Connexion.vue'),
     },
     {
       path: '/adherent',
       name: 'adherent',
-      component: Adherent,
+      component: () => import('@/views/Adherent.vue'),
       meta: { requiresAuth: true },
     },
     {
-      path: '/automobile/:id', // Chemin avec un paramètre ID
-      name: 'automobileWithId', // Nom de la route
-      component: Automobile, // Composant lié à la route
+      path: '/automobile/:id',
+      name: 'automobileWithId',
+      component: () => import('@/views/Automobile.vue'),
       meta: { requiresAuth: true }
     },
     {
-      path: '/automobile', // Chemin sans paramètres
-      name: 'automobileWithoutId', // Nom de la route
-      component: Automobile, // Composant lié à la route
-      meta: { requiresAuth: true },
-    },
-
-    {
-      path: '/liste-automobile', // Chemin sans paramètres
-      name: 'liste-automobile', // Nom de la route
-      component: ListeAutomobile, // Composant lié à la route
+      path: '/automobile',
+      name: 'automobileWithoutId',
+      component: () => import('@/views/Automobile.vue'),
       meta: { requiresAuth: true },
     },
     {
-      path: '/liste-adherent', // Chemin sans paramètres
-      name: 'liste-adherent', // Nom de la route
-      component: ListeAdherent, // Composant lié à la route
+      path: '/liste-automobile',
+      name: 'liste-automobile',
+      component: () => import('@/views/AutomobileListe.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/liste-adherent',
+      name: 'liste-adherent',
+      component: () => import('@/views/AdherentListe.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/saisie',
       name: 'saisie',
-      component: Saisie,
+      component: () => import('@/views/Saisie.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/nouvelle-souscription',
       name: 'nouvelle-souscription',
-      component: Souscription,
+      component: () => import('@/views/Souscription.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/nouvelle-souscription/renouvelement-contrat',
       name: 'nouvelle-souscription/renouvelement-contrat',
-      component: renouvelementContrat,
+      component: () => import('@/views/renouvelement-contrat.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/amortissement',
       name: 'amortissement', 
-      component: Amortissement, 
+      component: () => import('@/views/Amortissement.vue'), 
       meta: { requiresAuth: true }
     },
     {
       path: '/liste-souscription',
-      name: 'liste-souscription', 
-      component: listeSouscription, 
+      name: 'liste-souscription',
+      component: () => import('@/views/listeSouscription.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/details-souscription',
-      name: 'details-souscription', 
-      component: detailSouscription, 
+      name: 'details-souscription',
+      component: () => import('@/views/detailSouscription.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/commande',
-      name: 'commande', 
-      component: Commande, 
+      name: 'commande',
+      component: () => import('@/views/Commande.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/impression-viniette',
-      name: 'impression-viniette', 
-      component: imprimer, 
+      name: 'impression-viniette',
+      component: () => import('@/views/imprimer.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/consultation',
-      name: 'consultation', 
-      component: Consultation, 
+      name: 'consultation',
+      component: () => import('@/views/Consultation.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/liste-societe',
-      name: 'liste-societe', 
-      component: SocieteListe, 
+      name: 'liste-societe',
+      component: () => import('@/views/SocieteListe.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/societe',
-      name: 'societe', 
-      component: Societe, 
+      name: 'societe',
+      component: () => import('@/views/Societe.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/liste-objectif',
-      name: 'liste-objectif', 
-      component: ObjectifListe, 
+      name: 'liste-objectif',
+      component: () => import('@/views/ObjectifListe.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/revenus',
-      name: 'revenus', 
-      component: RevenusListe, 
+      name: 'revenus',
+      component: () => import('@/views/RevenusListe.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/liste-station',
-      name: 'liste-station', 
-      component: StationListe, 
+      name: 'liste-station',
+      component: () => import('@/views/StationListe.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/liste-point-vente',
-      name: 'liste-point-vente', 
-      component: PointDeVenteListe, 
+      name: 'liste-point-vente',
+      component: () => import('@/views/PointDeVenteListe.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/liste-agent',
-      name: 'liste-agent', 
-      component: AgentListe, 
+      name: 'liste-agent',
+      component: () => import('@/views/AgentListe.vue'),
       meta: { requiresAuth: true }
     },
+    {
+      path: '/consultation-compte',
+      name: 'consultation-compte',
+      component: () => import('@/views/ConsultationCompte.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/consultation-caisse',
+      name: 'consultation-caisse',
+      component: () => import('@/views/ConsultationCaisse.vue'),
+      meta: { requiresAuth: true }
+    }
   ]
 })
 

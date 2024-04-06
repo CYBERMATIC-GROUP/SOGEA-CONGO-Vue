@@ -1,7 +1,9 @@
 <template>
   <Card class="w-full shadow-md bg-[#73B1E7] rounded-xl">
     <div class="w-full h-[2rem] select-none flex justify-center items-center">
-      <h1 class="font-[600] text-white text-[1.3rem]">Liste des Adhérents</h1>
+      <h1 class="font-[600] text-white text-[1.3rem]">
+        Recherchez et selectionnez une commande
+      </h1>
     </div>
     <CardContent class="bg-white">
       <div class="pt-5 flex flex-row space-x-5">
@@ -80,12 +82,26 @@ const paginationText = {
   items_per_page: "éléments / page", // Custom text for "items per page" part
 };
 
+const DataDebut = ref("");
+const DataFin = ref("");
+
+function formatDateISO(date: any) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Les mois sont indexés à partir de 0
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+const dateString = "20240101";
+const year = parseInt(dateString.substring(0, 4));
+const month = parseInt(dateString.substring(4, 6)) - 1; // Soustraire 1 car les mois sont indexés à partir de 0
+const day = parseInt(dateString.substring(6, 8));
+const datePreRemplie = new Date(year, month, day);
+DataDebut.value = formatDateISO(datePreRemplie);
+DataFin.value = formatDateISO(new Date());
+
 const defaultValue = ref({
-  Nom: "",
-  Prenom: "",
-  "Immatriculation ": "",
-  Mobile: "",
-  DataDebut: "",
+  DataDebut: dateString,
   DataFin: "",
 });
 
@@ -102,7 +118,7 @@ const Update = (data: any) => {
 
 const fetchAutomobile = async () => {
   try {
-    await getAutomobile.fetchAutomobile(defaultValue);
+    await getAutomobile.fetchAutomobile(defaultValue.value);
     automobile.value = getAutomobile.automobile;
     console.log(automobile.value);
     filterAutomible();
@@ -129,9 +145,6 @@ function filterAutomible() {
     );
   });
 }
-
-const DataDebut = ref("");
-const DataFin = ref("");
 
 const filterTableau = async () => {
   let dateStringDebut = DataDebut.value.replace(/-/g, "");

@@ -82,7 +82,7 @@ import type { Souscription } from "@/model/souscription";
 import { useSouscription } from "@/stores/souscription";
 import { Button } from "@/components/ui/button";
 
-const tabAmmortissement = ref<Souscription[]>([]);
+const tabAmmortissement = ref<any[]>([]);
 const getSouscription = useSouscription();
 const loading = ref(false);
 

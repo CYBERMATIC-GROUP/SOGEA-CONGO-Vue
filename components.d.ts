@@ -8,9 +8,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
-    ASelect: typeof import('ant-design-vue/es')['Select']
-    ASelectOption: typeof import('ant-design-vue/es')['SelectOption']
-    ASpace: typeof import('ant-design-vue/es')['Space']
     ASpin: typeof import('ant-design-vue/es')['Spin']
     ATable: typeof import('ant-design-vue/es')['Table']
     Button: typeof import('./src/components/ui/button/Button.vue')['default']
@@ -24,7 +21,6 @@ declare module 'vue' {
     DeleteAgent: typeof import('./src/components/deleteAgent.vue')['default']
     DeleteAutomobile: typeof import('./src/components/deleteAutomobile.vue')['default']
     DeletepointDeVente: typeof import('./src/components/deletepointDeVente.vue')['default']
-    DeletePointDeVente: typeof import('./src/components/deletePointDeVente.vue')['default']
     DeleteSociete: typeof import('./src/components/deleteSociete.vue')['default']
     DeleteStation: typeof import('./src/components/deleteStation.vue')['default']
     Dialog: typeof import('./src/components/ui/dialog/Dialog.vue')['default']
@@ -62,7 +58,6 @@ declare module 'vue' {
     InputForm: typeof import('./src/components/inputForm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    SaveAmortissement: typeof import('./src/components/saveAmortissement.vue')['default']
     SeachAutomobile: typeof import('./src/components/SeachAutomobile.vue')['default']
     SideBar: typeof import('./src/components/SideBar.vue')['default']
     Table: typeof import('./src/components/table.vue')['default']

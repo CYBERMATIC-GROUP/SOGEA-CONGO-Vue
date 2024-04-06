@@ -74,7 +74,7 @@ import { useRevenus } from "@/stores/revenus";
 
 const getObjectif = useRevenus();
 const revenus = ref<Revenus[]>([]);
-const tabAmmortissement = ref<Revenus[]>([]);
+const tabAmmortissement = ref<any[]>([]);
 const chargement = ref(true);
 
 const fetchRevenus = async () => {
@@ -98,7 +98,7 @@ function formatNumber(number: any): any {
 
 onMounted(fetchRevenus);
 
-const columns: any = [
+const columns: any[] = [
   {
     title: "Année",
     dataIndex: "Annee",

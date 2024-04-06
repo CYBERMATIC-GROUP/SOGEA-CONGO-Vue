@@ -18,81 +18,89 @@
             <Button @click="toogleAutomobile" class="w-full bg-bg-primary"
               >Cliquer ici pour Sélectionner un véhicule</Button
             >
-            <div class="border flex flex-col space-y-3">
+            <div class="border grid grid-cols-1 divide-y">
               <h1 class="text-center font-semibold text-[1.2rem]">Assuré</h1>
-              <span class="flex flex-row justify-between px-4">
+              <span
+                class="flex flex-row justify-between px-4 py-1 items-center"
+              >
                 <p>Nom</p>
-                <p class="text-red-400">: {{ data.nom }}</p>
+                <p class="">: {{ data.nom }}</p>
               </span>
-              <span class="flex flex-row justify-between px-4">
+              <span
+                class="flex flex-row justify-between px-4 py-1 items-center"
+              >
                 <p>Prénoms</p>
-                <p class="text-red-400">: {{ data.P_Prenom }}</p>
+                <p class="">: {{ data.P_Prenom }}</p>
               </span>
-              <span class="flex flex-row justify-between px-4">
+              <span
+                class="flex flex-row justify-between px-4 py-1 items-center"
+              >
                 <p>Fonction :</p>
-                <p class="text-red-400"></p>
+                <p class=""></p>
               </span>
-              <span class="flex flex-row justify-between px-4">
+              <span
+                class="flex flex-row justify-between px-4 py-1 items-center"
+              >
                 <p>Adresse :</p>
-                <p class="text-red-400"></p>
+                <p class=""></p>
               </span>
-            </div>
-            <div class="flex flex-col">
-              <div
-                class="flex flex-row px-4 justify-between items-center cursor-pointer hover:bg-[#F3F6F9] py-2"
-              >
-                <p class="w-[18rem] text-red-400 pt-3">Versement</p>
-                <InputForm
-                  type="number"
-                  class="pb-2"
-                  :cacher="true"
-                  id="montant"
-                  placeholder="Montant ici"
-                />
-              </div>
-              <div
-                class="flex flex-row px-4 justify-between items-center cursor-pointer hover:bg-[#F3F6F9]"
-              >
-                <p class="w-[18rem] text-red-400 pt-3">Revenue Net</p>
-                <InputForm
-                  type="number"
-                  class="pb-2"
-                  :cacher="true"
-                  id="montant"
-                  placeholder="Montant ici"
-                />
-              </div>
             </div>
           </div>
         </div>
         <div class="w-[50%]">
-          <div class="border flex flex-col space-y-3 py-4">
+          <div class="border grid grid-cols-1 divide-y">
             <h1 class="text-center font-semibold text-[1.2rem]">Véhicule</h1>
-            <span class="flex flex-row justify-between px-4">
+            <span class="flex flex-row justify-between px-4 py-1">
               <p>Immatriculation</p>
-              <p class="text-red-400">: {{ data.Immatriculation }}</p>
+              <p class="">: {{ data.Immatriculation }}</p>
             </span>
-            <span class="flex flex-row justify-between px-4">
+            <span class="flex flex-row justify-between px-4 py-1">
               <p>Type</p>
-              <p class="text-red-400">: {{ data.TypeAutomobile }}</p>
+              <p class="">: {{ data.TypeAutomobile }}</p>
             </span>
-            <span class="flex flex-row justify-between px-4">
+            <span class="flex flex-row justify-between px-4 py-1">
               <p>Marque</p>
-              <p class="text-red-400">: {{ data.MarqueAutomobile }}</p>
+              <p class="">: {{ data.MarqueAutomobile }}</p>
             </span>
-            <span class="flex flex-row justify-between px-4">
+            <span class="flex flex-row justify-between px-4 py-1">
               <p>Genre</p>
-              <p class="text-red-400">: {{ data.Genre }}</p>
+              <p class="">: {{ data.Genre }}</p>
             </span>
-            <span class="flex flex-row justify-between px-4">
+            <span class="flex flex-row justify-between px-4 py-1">
               <p>Source d'énergie</p>
-              <p class="text-red-400">: {{ data.SourceEnergie }}</p>
+              <p class="">: {{ data.SourceEnergie }}</p>
             </span>
-            <span class="flex flex-row justify-between px-4">
+            <span class="flex flex-row justify-between px-4 py-1">
               <p>Année de première mise en service</p>
-              <p class="text-red-400">: {{ data.AnneeConstruction }}</p>
+              <p class="">: {{ data.AnneeConstruction }}</p>
             </span>
           </div>
+        </div>
+      </div>
+      <div class="flex flex-row justify-between mt-3">
+        <div
+          class="w-[50%] flex flex-row px-4 justify-between items-center cursor-pointer hover:bg-[#F3F6F9] py-2"
+        >
+          <p class="w-[18rem] pt-3">Versement</p>
+          <InputForm
+            type="number"
+            class="pb-2"
+            :cacher="true"
+            id="montant"
+            placeholder="Montant ici"
+          />
+        </div>
+        <div
+          class="w-[50%] flex flex-row px-4 justify-between items-center cursor-pointer hover:bg-[#F3F6F9]"
+        >
+          <p class="w-[18rem] pt-3">Revenue Net</p>
+          <InputForm
+            type="number"
+            class="pb-2"
+            :cacher="true"
+            id="montant"
+            placeholder="Montant ici"
+          />
         </div>
       </div>
       <div>
@@ -242,7 +250,7 @@
         <!-- <a-spin /> -->
         <div
           class="fixed w-screen min-h-[100vh] backdrop-blur-sm bg-white/30 top-[50%] left-[50%]"
-          style="transform: translate(-40%, -40%)"
+          style="transform: translate(-50%, -50%)"
         >
           <div class="w-screen h-screen flex items-center justify-center">
             <a-spin />
@@ -294,7 +302,7 @@
   </Dialog>
 
   <Dialog v-if="openAutomobile" v-model:open="openAutomobile">
-    <DialogContent class="sm:min-w-[60rem]">
+    <DialogContent class="sm:min-w-[60rem] pt-5">
       <AutomobileListe @notification="notification" />
     </DialogContent>
   </Dialog>
@@ -351,7 +359,7 @@ const chargement = ref(true);
 const parametre = ref<ParametreGeneral>();
 const getCalcul = useCalcul();
 
-const tabAmmortissement = ref<XEcheancierAnnuelItem[]>([]);
+const tabAmmortissement = ref<any[]>([]);
 const pdf = ref();
 
 const toggleInput = async () => {
@@ -435,7 +443,7 @@ function convertirDateEnFrancais(dateString: string): string {
   return date.toLocaleDateString("fr-FR", options);
 }
 
-function convertirDate(dateString: string): string {
+function convertirDate(dateString: any): any {
   const date: Date = new Date(dateString);
   const options: Intl.DateTimeFormatOptions = {
     day: "numeric",
@@ -455,7 +463,7 @@ const paginationText = {
   items_per_page: "éléments / page", // Custom text for "items per page" part
 };
 
-const columns: any = [
+const columns: any[] = [
   {
     title: "N॰",
     key: "NumeroEcheance",
