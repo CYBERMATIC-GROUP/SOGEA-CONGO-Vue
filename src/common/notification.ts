@@ -10,7 +10,7 @@ const getSuccess = (message: string) => {
 
     const getError = (message: string) => {
       toast(message, {
-        autoClose: 3000,
+        autoClose: 60000,
         type: 'error',
         transition: 'flip',
         position: toast.POSITION.TOP_RIGHT,

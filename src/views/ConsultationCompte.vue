@@ -70,7 +70,7 @@
           <Button
             @click="afficher"
             :loading="loading"
-            :disabled="loading"
+            :disabled="loading || codeCompte == ''"
             class="w-full bg-bg-primary"
             >AFFICHER
           </Button>
@@ -84,6 +84,7 @@
         </Dialog>
 
         <Table
+          :totaux="totaux"
           :columns="columns"
           :visibleProduit="visibleProduit"
           :pageSize="pageSize"
@@ -158,7 +159,7 @@ dateFin.value = formatDateISO(new Date());
 const codeCompte = ref("");
 
 const DefaulValue = {
-  DateDebut: dateDebut.value,
+  DateDebut: "",
   DateFin: dateFin.value,
   CodeCompte: codeCompte.value,
   nModePaiment: 1,
@@ -168,13 +169,14 @@ const afficher = async () => {
   chargement.value = true;
   loading.value = true;
   try {
-    await compte.fetchCompte({
+    let response = await compte.fetchCompte({
       DateDebut: dateDebut.value,
       "DateFin ": dateFin.value,
       CodeCompte: codeCompte.value,
       nModePaiment: 1,
     });
     Compte.value = compte.ecriture;
+    totaux.value = response.Totaux;
     console.log(Compte.value);
     filterCompte();
     loading.value = false;
@@ -185,12 +187,20 @@ const afficher = async () => {
   }
 };
 
+interface Totaux {
+  TotalDebit: number;
+  TotalCredit: number;
+}
+
+const totaux = ref<Totaux>();
+
 const fetchCompte = async () => {
   try {
-    await compte.fetchCompte(DefaulValue);
+    let response = await compte.fetchCompte(DefaulValue);
     Compte.value = compte.ecriture;
-    console.log(Compte.value);
+    console.log(response);
     filterCompte();
+    totaux.value = response.Totaux;
     chargement.value = false;
   } catch (error) {
     console.error((error as any).response?.data?.message);
@@ -229,6 +239,11 @@ const columns = [
     title: "Date comptable",
     dataIndex: "DateHeure",
     key: "DateHeure",
+  },
+  {
+    title: "Utilisateur",
+    dataIndex: "Utilisateur",
+    key: "Utilisateur",
   },
   {
     title: "N° MVT",

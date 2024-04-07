@@ -142,6 +142,31 @@
           </div>
         </template>
       </template>
+
+      <template
+        v-if="
+          $route.path == '/consultation-compte' ||
+          $route.path == '/consultation-caisse'
+        "
+        #footer
+      >
+        <div
+          v-if="totaux"
+          class="bg-[#73B1E7] py-3 flex text-white space-x-5 justify-between"
+        >
+          <p class="font-[600]">Solde de la période sélectionner:</p>
+          <div class="flex space-x-6 text-white">
+            <p>
+              <span class="pe-3">Total Débit</span>
+              {{ formatNumber(totaux?.TotalDebit) }} XAF
+            </p>
+            <p>
+              <span class="pe-3">Total Crédit</span>
+              {{ formatNumber(totaux?.TotalCredit) }} XAF
+            </p>
+          </div>
+        </div>
+      </template>
     </a-table>
   </a-config-provider>
 </template>
@@ -210,6 +235,7 @@ const {
   pageSizeOptions,
   paginationText,
   handleChangePageSize,
+  totaux,
 } = defineProps([
   "chargement",
   "columns",
@@ -218,5 +244,6 @@ const {
   "pageSizeOptions",
   "paginationText",
   "handleChangePageSize",
+  "totaux",
 ]);
 </script>

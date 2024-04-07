@@ -100,7 +100,7 @@
           <Button
             @click="afficher"
             :loading="loading"
-            :disabled="loading"
+            :disabled="loading || !IDCAISSE"
             class="w-full bg-bg-primary"
             >AFFICHER
           </Button>
@@ -114,6 +114,7 @@
         </Dialog>
 
         <Table
+          :totaux="totaux"
           :columns="columns"
           :visibleProduit="visibleProduit"
           :pageSize="pageSize"
@@ -197,7 +198,7 @@ const { errors, handleSubmit, defineField } = useForm({
 const [IDCAISSE, IDCAISSEAttrs] = defineField("IDCAISSE");
 
 const DefaulValue = {
-  DateDebut: dateDebut.value,
+  DateDebut: "",
   DateFin: dateFin.value,
   IDCAISSE: 0,
   nModePaiment: 1,
@@ -224,9 +225,18 @@ const afficher = async () => {
   }
 };
 
+interface Totaux {
+  TotalDebit: number;
+  TotalCredit: number;
+}
+
+const totaux = ref<Totaux>();
+
 const fetchCompte = async () => {
   try {
-    await compte.fetchCaisse(DefaulValue);
+    let response = await compte.fetchCaisse(DefaulValue);
+    console.log(response);
+    totaux.value = response.Totaux;
     Compte.value = compte.ecriture;
     console.log(Compte.value);
     filterCompte();
@@ -315,6 +325,11 @@ const columns = [
     title: "Débit ",
     key: "MontantDebit",
     dataIndex: "MontantDebit",
+  },
+  {
+    title: "Crédit",
+    key: "MontantCredit",
+    dataIndex: "MontantCredit",
   },
 ];
 
