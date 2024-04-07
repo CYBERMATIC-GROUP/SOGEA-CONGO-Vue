@@ -18,6 +18,16 @@ export const useAdherent = defineStore('adherent', {
         throw error;
       }
     },
+    async getOne(id : number) {
+      try { 
+        const response = await api.get(EndPoint+'/'+id);
+        this.proprietaire = response.data;
+        return response.data; 
+      } catch (error) {
+        console.error('Erreur lors de la recuperation des proprietaires', error);
+        throw error;
+      }
+    },
     async createAdherent(data: object) {
     try{
         const response = await api.post(EndPoint, data);

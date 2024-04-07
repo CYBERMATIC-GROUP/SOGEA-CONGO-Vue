@@ -128,31 +128,29 @@
         <TextAndSelect
           label="Quartier"
           id="quartier"
-          :value="NomQuartier"
           :readonly="!modif"
-          :valid="errors.NomQuartier"
+          :valid="errors.IDQUARTIER"
           :options="optionsQuartier"
-          v-bind="NomQuartierAttrs"
+          v-bind="IDQUARTIERAttrs"
           placeholder="Veuillez saisir votre quartier"
-          v-model="NomQuartier"
+          v-model="IDQUARTIER"
         />
-        <span class="text-red-color">{{ errors.NomQuartier }}</span>
+        <span class="text-red-color">{{ errors.IDQUARTIER }}</span>
       </div>
     </div>
     <div class="pt-5 flex flex-row justify-between space-x-5">
       <div class="w-full">
         <TextAndSelect
           label="Zone"
-          type="text"
           id="zone"
-          :options="optionsQuartier"
-          v-model="Zone"
+          :options="optionsZone"
+          v-model="IDZone"
           :readonly="!modif"
-          :valid="errors.Zone"
-          v-bind="ZoneAttrs"
+          :valid="errors.IDZone"
+          v-bind="IDZoneAttrs"
           placeholder="Entrer la zone"
         />
-        <span class="text-red-color">{{ errors.Zone }}</span>
+        <span class="text-red-color">{{ errors.IDZone }}</span>
       </div>
 
       <div class="w-full">
@@ -265,7 +263,7 @@ import { defineEmits } from "vue";
 const { errors, handleSubmit, defineField } = useForm({
   validationSchema: yup.object({
     IDDEPARTEMENT: yup.string().required("Veuillez saisir votre département."),
-    NomQuartier: yup.string().required("Veuillez saisir le nom du quartier."),
+    IDQUARTIER: yup.string().required("Veuillez saisir le nom du quartier."),
     IDARRONDISSEMENT: yup
       .string()
       .required("Veuillez saisir votre arrondissement."),
@@ -277,7 +275,7 @@ const { errors, handleSubmit, defineField } = useForm({
       .string()
       .required("Veuillez saisir votre numéro de téléphone portable."),
     NIU: yup.string().required("Veuillez saisir votre NIU."),
-    Zone: yup.string().required("Veuillez saisir votre zone."),
+    IDZone: yup.string().required("Veuillez saisir votre zone."),
     DateExpirationPiece: yup
       .string()
       .required(
@@ -292,11 +290,12 @@ const { errors, handleSubmit, defineField } = useForm({
 });
 
 const [IDDEPARTEMENT, IDDEPARTEMENTAttrs] = defineField("IDDEPARTEMENT");
-const [NomQuartier, NomQuartierAttrs] = defineField("NomQuartier");
+const [IDQUARTIER, IDQUARTIERAttrs] = defineField("IDQUARTIER");
+
 const [IDARRONDISSEMENT, IDARRONDISSEMENTAttrs] =
   defineField("IDARRONDISSEMENT");
 const [eMail, eMailAttrs] = defineField("eMail");
-const [Zone, ZoneAttrs] = defineField("Zone");
+const [IDZone, IDZoneAttrs] = defineField("IDZone");
 const [CNI, CNIAttrs] = defineField("CNI");
 const [Nom, NomAttrs] = defineField("Nom");
 const [Prenom, PrenomAttrs] = defineField("Prenom");
@@ -321,6 +320,7 @@ interface Option {
 const optionsDepartement = ref<Option[]>([]);
 const optionsArrondissement = ref<Option[]>([]);
 const optionsQuartier = ref<Option[]>([]);
+const optionsZone = ref<Option[]>([]);
 
 onMounted(async () => {
   await getDepartement.fetchDepartement();
@@ -358,16 +358,29 @@ watch(IDARRONDISSEMENT, async (newValue, oldValue) => {
   const data = {
     IDRESSOURCE: 0,
     IDZone: 0,
-    IDDEPARTEMENT: newValue,
-    IDARRONDISSEMENT: IDDEPARTEMENT.value,
+    IDDEPARTEMENT: IDDEPARTEMENT.value,
+    IDARRONDISSEMENT: newValue,
   };
   try {
     let response = await getArrondissement.fetchRessource(data, "Quartier");
+    console.log(IDARRONDISSEMENT.value);
     console.log(response);
     optionsQuartier.value = response.map(
       (item: { IDQUARTIER: number; NomQuartier: any }) => ({
         value: item.IDQUARTIER,
         label: item.NomQuartier,
+      })
+    );
+  } catch (error) {
+    console.error(error);
+  }
+  try {
+    let response = await getArrondissement.fetchRessource(data, "Zone");
+    console.log(response);
+    optionsZone.value = response.map(
+      (item: { IDZone: number; NomZone: any }) => ({
+        value: item.IDZone,
+        label: item.NomZone,
       })
     );
   } catch (error) {
@@ -390,10 +403,23 @@ const RefrehFunction = async () => {
 
 const onSubmit = !values
   ? handleSubmit(async (values) => {
+      let Zone = IDZone.value;
+      let NomQuartier = IDQUARTIER.value;
+
+      if (typeof IDZone.value === "string") {
+        Zone = IDZone.value;
+        values.IDZone = 0;
+      }
+      if (typeof IDQUARTIER.value === "string") {
+        NomQuartier = IDQUARTIER.value;
+        values.IDQUARTIER = 0;
+      }
+
+      const data = { Zone, NomQuartier, ...values };
       loading.value = true;
       console.log("Les datas : ", values);
       try {
-        let response = await createAdherent.createAdherent(values);
+        let response = await createAdherent.createAdherent(data);
         console.log(response);
         getSuccess("L'adhérent a été ajouter avec succèss");
         localStorage.setItem("adherent", JSON.stringify(response));
@@ -408,11 +434,25 @@ const onSubmit = !values
       }
     })
   : handleSubmit(async (value) => {
+      let Zone = IDZone.value;
+      let NomQuartier = IDQUARTIER.value;
+
+      if (typeof IDZone.value === "string") {
+        Zone = IDZone.value;
+        value.IDZone = 0;
+      }
+      if (typeof IDQUARTIER.value === "string") {
+        NomQuartier = IDQUARTIER.value;
+        value.IDQUARTIER = 0;
+      }
+
+      const data = { Zone, NomQuartier, ...value };
+
       loading.value = true;
-      console.log("Mise à jours : ", values.IDProprietaire);
+      console.log("Mise à jours : ", data);
       try {
         let response = await createAdherent.UpdateAdherent(
-          value,
+          data,
           values.IDProprietaire
         );
         await RefrehFunction();
@@ -440,22 +480,31 @@ function formatHTMLDate(dateString: any) {
 }
 
 if (values !== undefined) {
-  IDDEPARTEMENT.value = values.IDDEPARTEMENT;
-  NomQuartier.value = values.NomQuartier;
-  IDARRONDISSEMENT.value = values.IDARRONDISSEMENT;
-  eMail.value = values.eMail;
-  Zone.value = values.Zone;
-  CNI.value = values.CNI;
-  Nom.value = values.Nom;
-  Prenom.value = values.Prenom;
-  TelPortable.value = values.TelPortable;
-  NIU.value = values.NIU;
-  DateExpirationPiece.value =
-    values.DateExpirationPiece == "0000-00-00"
-      ? values.DateExpirationPiece
-      : formatHTMLDate(values.DateExpirationPiece);
-  TypePiece.value = values.TypePiece;
-  Adresse.value = values.Adresse;
-  Civilite.value = values.Civilite;
+  // NomQuartier.value = values.NomQuartier;
+  IDQUARTIER.value = values.NomQuartier;
+  IDZone.value = values.Zone;
+  try {
+    const asyncFunction = async () => {
+      let response = await createAdherent.getOne(values.IDProprietaire);
+      IDDEPARTEMENT.value = response.IDDEPARTEMENT;
+      IDARRONDISSEMENT.value = response.IDARRONDISSEMENT;
+      eMail.value = response.eMail;
+      CNI.value = response.CNI;
+      Nom.value = response.Nom;
+      Prenom.value = response.Prenom;
+      TelPortable.value = response.TelPortable;
+      NIU.value = response.NIU;
+      DateExpirationPiece.value =
+        response.DateExpirationPiece == "0000-00-00"
+          ? response.DateExpirationPiece
+          : formatHTMLDate(response.DateExpirationPiece);
+      TypePiece.value = response.TypePiece;
+      Adresse.value = response.Adresse;
+      Civilite.value = response.Civilite;
+    };
+    asyncFunction();
+  } catch (error) {
+    getError((error as any).response?.data?.fault?.detail);
+  }
 }
 </script>

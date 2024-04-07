@@ -18,6 +18,16 @@ export const useAgent= defineStore('agent', {
         throw error;
       }
     },
+    async getOne(id: number) {
+      try { 
+        const response = await api.get(EndPoint+'/'+id);
+        this.agent = response.data;
+        return response.data; 
+      } catch (error) {
+        console.error('Erreur lors de la recuperation de l\'agents', error);
+        throw error;
+      }
+    },
     async createAgent(data : object) {
       try { 
         const response = await api.post(EndPoint, data);

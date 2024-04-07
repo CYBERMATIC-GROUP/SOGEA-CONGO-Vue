@@ -27,8 +27,13 @@
         @click="!readonly && (showOptions = !showOptions)"
       />
       <div
-        v-if="showOptions && options.length > 1"
-        class="absolute z-50 bg-white border border-gray-300 mt-1 w-full rounded-lg shadow-lg h-[11rem] overflow-scroll overflow-x-hidden scrollbar-thin"
+        v-if="showOptions && options.length > 0"
+        :class="[
+          `absolute z-50 bg-white border border-gray-300 mt-1 w-full rounded-lg shadow-lg   `,
+          options.length < 3
+            ? ''
+            : 'h-[11rem] overflow-auto overflow-x-hidden scrollbar-thin',
+        ]"
       >
         <div
           v-for="option in options"

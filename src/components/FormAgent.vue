@@ -872,51 +872,58 @@ const IDagent = ref();
 
 if (storageAdherentString !== null && !update) {
   const storageAdherent = JSON.parse(storageAdherentString);
-  previewImg.value =
-    storageAdherent.Photo == "" ? profileImg : storageAdherent.Photo;
-  IDagent.value = storageAdherent.IDagent;
-  Nom.value = storageAdherent.Nom;
-  Prenom.value = storageAdherent.Prenom;
-  eMail.value = storageAdherent.eMail;
-  Civilite.value = storageAdherent.Civilite;
-  TelPortable.value = storageAdherent.TelPortable;
-  TelFixe.value = storageAdherent.TelFixe;
-  Adresse.value = storageAdherent.Adresse;
-  DateNaissance.value = storageAdherent.DateNaissance;
-  LieuNaissance.value = storageAdherent.LieuNaissance;
-  IDFonction_agent.value = storageAdherent.IDFonction_agent;
-  IDville.value = storageAdherent.IDville;
-  Nationalite.value = storageAdherent.Nationalite;
-  SalaireBase.value = storageAdherent.SalaireBase;
-  NumCompteBancaire.value = storageAdherent.NumCompteBancaire;
-  NumSecuriteSocial.value = storageAdherent.NumSecuriteSocial;
-  NombrePartsImpot.value = storageAdherent.NombrePartsImpot;
-  IDCOMPTE.value = storageAdherent.IDCOMPTE;
-  NombreEnfants.value = storageAdherent.NombreEnfants;
-  SituationFamiliale.value = storageAdherent.SituationFamiliale;
-  bDroitRealiserControle.value = storageAdherent.bDroitRealiserControle;
-  bDroitEncaisser.value = storageAdherent.bDroitEncaisser;
-  bDroitGererCaisse.value = storageAdherent.bDroitGererCaisse;
-  bAjouterTypeAutomobile.value = storageAdherent.bAjouterTypeAutomobile;
-  bDroitAjouterAotomobile.value = storageAdherent.bDroitAjouterAotomobile;
-  bDroitSupprimerEcriture.value = storageAdherent.bDroitSupprimerEcriture;
-  bDroitGererProduitAssurence.value =
-    storageAdherent.bDroitGererProduitAssurence;
-  bEstAdministrateurProduitsAssurences.value =
-    storageAdherent.bEstAdministrateurProduitsAssurences;
-  bDroitGererAgents.value = storageAdherent.bDroitGererAgents;
-  bDroitImprimerStatistiques.value = storageAdherent.bDroitImprimerStatistiques;
-  bDroitGererProduitsControleTechniques.value =
-    storageAdherent.bDroitGererProduitsControleTechniques;
-  bDroitImprimerVignette.value = storageAdherent.bDroitImprimerVignette;
-  bDateExpiration.value = storageAdherent.bDateExpiration;
-  bDroitValiderCommande.value = storageAdherent.bDroitValiderCommande;
-  bAdminidtrateur.value = storageAdherent.bAdminidtrateur;
-  bdroitAjouterAgent.value = storageAdherent.bdroitAjouterAgent;
-  bDroitImprimerContrat.value = storageAdherent.bDroitImprimerContrat;
-  bSuperUtilisateur.value = storageAdherent.bSuperUtilisateur;
-  bCompteActif.value = storageAdherent.bCompteActif;
-  bDroitAjouterProduit.value = storageAdherent.bDroitAjouterProduit;
+  try {
+    const asyncFunction = async () => {
+      let response = await getAgent.getOne(storageAdherent.IDagent);
+      previewImg.value =
+        storageAdherent.Photo == "" ? profileImg : response.Photo;
+      IDagent.value = response.IDagent;
+      Nom.value = response.Nom;
+      Prenom.value = response.Prenom;
+      eMail.value = response.eMail;
+      Civilite.value = response.Civilite;
+      TelPortable.value = response.TelPortable;
+      TelFixe.value = response.TelFixe;
+      Adresse.value = response.Adresse;
+      DateNaissance.value = response.DateNaissance;
+      LieuNaissance.value = response.LieuNaissance;
+      IDFonction_agent.value = response.IDFonction_agent;
+      IDville.value = response.IDville;
+      Nationalite.value = response.Nationalite;
+      SalaireBase.value = response.SalaireBase;
+      NumCompteBancaire.value = response.NumCompteBancaire;
+      NumSecuriteSocial.value = response.NumSecuriteSocial;
+      NombrePartsImpot.value = response.NombrePartsImpot;
+      IDCOMPTE.value = response.IDCOMPTE;
+      NombreEnfants.value = response.NombreEnfants;
+      SituationFamiliale.value = response.SituationFamiliale;
+      bDroitRealiserControle.value = response.bDroitRealiserControle;
+      bDroitEncaisser.value = response.bDroitEncaisser;
+      bDroitGererCaisse.value = response.bDroitGererCaisse;
+      bAjouterTypeAutomobile.value = response.bAjouterTypeAutomobile;
+      bDroitAjouterAotomobile.value = response.bDroitAjouterAotomobile;
+      bDroitSupprimerEcriture.value = response.bDroitSupprimerEcriture;
+      bDroitGererProduitAssurence.value = response.bDroitGererProduitAssurence;
+      bEstAdministrateurProduitsAssurences.value =
+        response.bEstAdministrateurProduitsAssurences;
+      bDroitGererAgents.value = response.bDroitGererAgents;
+      bDroitImprimerStatistiques.value = response.bDroitImprimerStatistiques;
+      bDroitGererProduitsControleTechniques.value =
+        response.bDroitGererProduitsControleTechniques;
+      bDroitImprimerVignette.value = response.bDroitImprimerVignette;
+      bDateExpiration.value = response.bDateExpiration;
+      bDroitValiderCommande.value = response.bDroitValiderCommande;
+      bAdminidtrateur.value = response.bAdminidtrateur;
+      bdroitAjouterAgent.value = response.bdroitAjouterAgent;
+      bDroitImprimerContrat.value = response.bDroitImprimerContrat;
+      bSuperUtilisateur.value = response.bSuperUtilisateur;
+      bCompteActif.value = response.bCompteActif;
+      bDroitAjouterProduit.value = response.bDroitAjouterProduit;
+    };
+    asyncFunction();
+  } catch (error) {
+    getError((error as any).response?.data?.fault?.detail);
+  }
 } else {
   bDroitRealiserControle.value = false;
   bDroitEncaisser.value = false;

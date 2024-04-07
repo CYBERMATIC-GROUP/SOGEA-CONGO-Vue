@@ -27,12 +27,19 @@
       <div>
         <Dialog v-if="openCreate" v-model:open="openCreate">
           <DialogContent class="min-w-[70rem]">
-            <FormObjectif :update="true" />
+            <FormObjectif
+              :update="true"
+              @RefrehFunction="fetchSociete"
+              @updateopenUpdate="updateopenUpdate"
+            />
           </DialogContent>
         </Dialog>
         <Dialog v-if="open" v-model:open="open">
           <DialogContent class="min-w-[70rem]">
-            <FormObjectif />
+            <FormObjectif
+              @RefrehFunction="fetchSociete"
+              @updateopenUpdate="updateopenUpdate"
+            />
           </DialogContent>
         </Dialog>
 
@@ -189,7 +196,8 @@ const columns = [
   },
 ];
 
-const handleUpdate = (value: any) => {
-  open.value = value;
+const updateopenUpdate = (data: any) => {
+  openCreate.value = data;
+  open.value = data;
 };
 </script>

@@ -127,7 +127,7 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "vee-validate";
 import * as yup from "yup";
 import Logo from "../assets/img/sogea.jpg";
-import Input from "../components/ui/input.vue";
+import Input from "../components/ui/inputConnexion.vue";
 import { ref } from "vue";
 import eye from "../components/icons/eye.svg";
 import eyeSlash from "../components/icons/eye-slash.svg";

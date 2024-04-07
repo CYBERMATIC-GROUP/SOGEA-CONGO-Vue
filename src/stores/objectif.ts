@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { api } from "../axios/axios";
 import type { Objectif } from '@/model/objectif';
 const EndPoint = "/sogeacongo/v1/STATISTIQUES_Get_State_Objectif"
+const EndPointCreate = "/sogeacongo/v1/OBECTIFS"
 
 export const useObjectif = defineStore('objectif', {
     state: () => ({
@@ -20,11 +21,20 @@ export const useObjectif = defineStore('objectif', {
     },
     async createObjectif(data : object) {
       try { 
-        const response = await api.post(EndPoint, data);
+        const response = await api.post(EndPointCreate, data);
         this.objectif = response.data;
         return response.data; 
       } catch (error) {
-        console.error('Erreur lors de la création des societes', error);
+        console.error('Erreur lors de la création des objectif', error);
+        throw error;
+      }
+    },
+    async getOne(id : number) {
+      try { 
+        const response = await api.get(EndPointCreate+'/'+id);
+        return response.data; 
+      } catch (error) {
+        console.error('Erreur lors de la recuperation de l\'objectif', error);
         throw error;
       }
     },

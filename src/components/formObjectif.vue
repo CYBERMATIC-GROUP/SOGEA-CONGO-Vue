@@ -45,14 +45,30 @@
       <div class="w-full">
         <InputForm
           label="C.A (Chiffre d'Affaire)"
-          type="text"
+          type="number"
           id="C.A (Chiffre d'Affaire)"
           :readonly="!modif"
           v-model="ChiffreAFaffaire"
           :valid="errors.ChiffreAFaffaire"
           v-bind="ChiffreAFaffaireAttrs"
+          placeholder="Veillez saisir le chiffre d'affaire "
         />
         <span class="text-red-color">{{ errors.ChiffreAFaffaire }}</span>
+      </div>
+
+      <div class="w-full">
+        <InputForm
+          label="Département"
+          type="select"
+          id="departement"
+          :readonly="!modif"
+          v-model="IDDEPARTEMENT"
+          :valid="errors.IDDEPARTEMENT"
+          v-bind="IDDEPARTEMENTAttrs"
+          labelDefaut="Sélectionné le département"
+          :options="optionsDepartement"
+        />
+        <span class="text-red-color">{{ errors.IDDEPARTEMENT }}</span>
       </div>
 
       <div class="w-full">
@@ -68,6 +84,22 @@
           :options="optionsSousAgence"
         />
         <span class="text-red-color">{{ errors.IDSOUSAGENGE }}</span>
+      </div>
+    </div>
+
+    <div class="pt-8 flex flex-row justify-between space-x-5">
+      <div class="w-full">
+        <InputForm
+          label="Chiffre d'affaire réaliser"
+          type="number"
+          id="CARealise"
+          :readonly="!modif"
+          v-model="CARealise"
+          :valid="errors.CARealise"
+          v-bind="CARealiseAttrs"
+          placeholder="Veillez saisir le chiffre d'affaire réaliser"
+        />
+        <span class="text-red-color">{{ errors.CARealise }}</span>
       </div>
     </div>
 
@@ -104,9 +136,11 @@ import router from "@/router";
 import { useSociete } from "@/stores/societe";
 import { defineEmits } from "vue";
 import { useSousAgence } from "../stores/sousAgence";
+import { useObjectif } from "@/stores/objectif";
 
 const { errors, handleSubmit, defineField } = useForm({
   validationSchema: yup.object({
+    IDDEPARTEMENT: yup.string().required("Veuillez saisir votre département."),
     DateDebut: yup.string().required("Veuillez saisir la date de début."),
     DateFin: yup.string().required("Veuillez saisir la date de fin."),
     NombreClient: yup
@@ -114,7 +148,10 @@ const { errors, handleSubmit, defineField } = useForm({
       .required("Veuillez saisir le nombre de clients."),
     ChiffreAFaffaire: yup
       .string()
-      .required("Veuillez saisir le chiffre d'affaires."),
+      .required("Veuillez saisir le chiffre d'affaire."),
+    CARealise: yup
+      .string()
+      .required("Veuillez saisir le chiffre d'affaire réaliser"),
     IDSOUSAGENGE: yup
       .string()
       .required("Veuillez sélectionner la sous-agence."),
@@ -122,24 +159,34 @@ const { errors, handleSubmit, defineField } = useForm({
 });
 
 const [DateDebut, DateDebutAttrs] = defineField("DateDebut");
+const [CARealise, CARealiseAttrs] = defineField("CARealise");
 const [DateFin, DateFinAttrs] = defineField("DateFin");
 const [NombreClient, NombreClientAttrs] = defineField("NombreClient");
 const [ChiffreAFaffaire, ChiffreAFaffaireAttrs] =
   defineField("ChiffreAFaffaire");
 const [IDSOUSAGENGE, IDSOUSAGENGEAttrs] = defineField("IDSOUSAGENGE");
+const [IDDEPARTEMENT, IDDEPARTEMENTAttrs] = defineField("IDDEPARTEMENT");
 
 interface Option {
   value: number;
   label: string;
 }
 const getSousAgence = useSousAgence();
+const getDepartement = useDepartement();
 const optionsSousAgence = ref<Option[]>([]);
+const getObjectif = useObjectif();
+const optionsDepartement = ref<Option[]>([]);
 
 onMounted(async () => {
   await getSousAgence.fetchSousAgence();
   optionsSousAgence.value = getSousAgence.sousAgence.map((item) => ({
     value: item.IDSOUSAGENGE,
     label: item.Nom,
+  }));
+  await getDepartement.fetchDepartement();
+  optionsDepartement.value = getDepartement.departement.map((item) => ({
+    value: item.IDDEPARTEMENT,
+    label: item.NomDepartement,
   }));
 });
 
@@ -163,23 +210,20 @@ const Modifier = () => {
 
 const onSubmit = !values
   ? handleSubmit(async (values) => {
-      //   const Logo = { Logo: previewImgData.value };
-      //   const donne = { ...Logo, ...values };
       loading.value = true;
       console.log("Les datas : ", values);
-      //   try {
-      //     let response = await getSociete.createSociete(donne);
-      //     console.log(response);
-      //     getSuccess("La societé a été ajouter avec succèss");
-      //     setTimeout(() => {
-      //       loading.value = false;
-      //       router.push({ path: "/liste-societe" });
-      //     }, 3000);
-      //   } catch (error) {
-      //     console.error((error as any).response?.data?.fault?.detail);
-      //     loading.value = false;
-      //     getError((error as any).response?.data?.fault?.detail);
-      //   }
+      try {
+        let response = await getObjectif.createObjectif(values);
+        console.log(response);
+        await RefrehFunction();
+        updateopenUpdate(false);
+        loading.value = false;
+        getSuccess("L'objectif a été ajouter avec succèss");
+      } catch (error) {
+        console.error((error as any).response?.data?.fault?.detail);
+        loading.value = false;
+        getError((error as any).response?.data?.fault?.detail);
+      }
     })
   : handleSubmit(async (value) => {
       //   const Logo = { Logo: previewImgData.value };
@@ -208,10 +252,21 @@ const storageAdherentString = sessionStorage.getItem("objectif");
 
 if (storageAdherentString !== null && !update) {
   const storageAdherent = JSON.parse(storageAdherentString);
-  DateDebut.value = storageAdherent.DateDebut;
-  DateFin.value = storageAdherent.DateFin;
-  NombreClient.value = storageAdherent.NombreClient;
-  ChiffreAFaffaire.value = storageAdherent.ChiffreAFaffaire;
-  IDSOUSAGENGE.value = storageAdherent.IDSOUSAGENGE;
+  try {
+    const asyncFunction = async () => {
+      let response = await getObjectif.getOne(storageAdherent.IDOBJECTIFS);
+      console.log(response);
+      DateDebut.value = response.DateDebut;
+      DateFin.value = response.DateFin;
+      NombreClient.value = response.NombreClient;
+      ChiffreAFaffaire.value = response.ChiffreAFaffaire;
+      IDSOUSAGENGE.value = response.IDSOUSAGENGE;
+      IDDEPARTEMENT.value = response.IDDEPARTEMENT;
+      CARealise.value = response.CARealise;
+    };
+    asyncFunction();
+  } catch (error) {
+    getError((error as any).response?.data?.fault?.detail);
+  }
 }
 </script>
