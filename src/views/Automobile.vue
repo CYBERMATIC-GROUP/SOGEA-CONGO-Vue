@@ -50,7 +50,7 @@
             </div>
             <div class="w-full">
               <InputForm
-                label="C.N.I"
+                :label="type"
                 type="text"
                 v-model="adherentCNI"
                 id="C.N.I"
@@ -205,6 +205,16 @@ const adherentName = adherent?.Nom;
 const adherentPrenom = adherent?.Prenom;
 const adherentContact = adherent?.TelPortable;
 const adherentCNI = adherent?.CNI;
-const adherentNUI = adherent?.NIU;
+const adherentNUI = adherent?.NIU.toUpperCase();
 const adherentAdresse = adherent?.Adresse;
+const type =
+  adherent?.TypePiece === "CNI"
+    ? "C.N.I"
+    : adherent?.TypePiece === "Passeport"
+    ? "Passeport"
+    : adherent?.TypePiece === "Permis de conduire"
+    ? "Permis de conduire"
+    : adherent?.TypePiece === "Carte de résident"
+    ? "Carte de résident"
+    : null;
 </script>

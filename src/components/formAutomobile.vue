@@ -139,30 +139,17 @@
         </div>
         <div class="w-full">
           <InputForm
-            label="Categorie"
+            label="Catégorie en Nature de prime"
             type="select"
             :readonly="!modif"
             id="Categorie"
-            v-model="IDCategorie"
-            :valid="errors.IDCategorie"
-            v-bind="IDCategorieAttrs"
+            v-model="IDProduit"
+            :valid="errors.IDProduit"
+            v-bind="IDProduitAttrs"
             labelDefaut="Sélectionné la catégorie"
-            :options="[
-              {
-                value: '9',
-                label: 'Taxi Familial \'Essence\' - 5 à 8 CVE / 5-6 Places',
-              },
-              {
-                value: '10',
-                label: ' Taxi Familial \'Essence\' - 5 à 8 CVE / 7-8 Places ',
-              },
-              {
-                value: '18',
-                label: ' Taxi Familial \'Essence\' - 9 à 13 CVE / 7-8 Places ',
-              },
-            ]"
+            :options="optionCategorie"
           />
-          <span class="text-red-color">{{ errors.IDCategorie }}</span>
+          <span class="text-red-color">{{ errors.IDProduit }}</span>
         </div>
       </div>
       <div class="flex flex-row space-x-5 mt-5">
@@ -310,7 +297,7 @@ import Voirure from "@/assets/img/car.jpeg";
 import { Button } from "@/components/ui/button";
 import { useForm } from "vee-validate";
 import * as yup from "yup";
-import { ref, defineEmits } from "vue";
+import { ref, defineEmits, watch } from "vue";
 import { useDepartement } from "@/stores/departement";
 import { useGenre } from "@/stores/genre";
 import { onMounted } from "vue";
@@ -323,6 +310,7 @@ import { getSuccess, getError } from "../common/notification";
 import type { Proprietaire } from "@/model/proprietaire";
 import router from "@/router";
 import { useRoute } from "vue-router";
+import { useNature } from "@/stores/naturePrime";
 
 const { errors, handleSubmit, defineField } = useForm({
   validationSchema: yup.object({
@@ -346,7 +334,7 @@ const { errors, handleSubmit, defineField } = useForm({
     IDSourceEnergie: yup
       .string()
       .required("Veuillez saisir l'ID de la source d'énergie."),
-    IDCategorie: yup.string().required("Veuillez saisir l'ID de la catégorie."),
+
     IDLesSocietes: yup
       .string()
       .required("Veuillez saisir le nom de la société."),
@@ -363,10 +351,12 @@ const { errors, handleSubmit, defineField } = useForm({
       .required("Veuillez saisir la date de délivrance."),
     IDProprietaire: yup.string().required("Veuillez saisir le propriétaire."),
     bTaxiMoto: yup.bool().required("Veuillez saisir si c'est un taxi moto."),
+    IDProduit: yup.string().required("Veuillez saisir le type d'automobile."),
   }),
 });
 
 const [Immatriculation, ImmatriculationAttrs] = defineField("Immatriculation");
+const [IDProduit, IDProduitAttrs] = defineField("IDProduit");
 const [NumeroSerie, NumeroSerieAttrs] = defineField("NumeroSerie");
 const [IdentifiantCarte, IdentifiantCarteAttrs] =
   defineField("IdentifiantCarte");
@@ -378,7 +368,6 @@ const [IDTypeAutomobile, IDTypeAutomobileAttrs] =
   defineField("IDTypeAutomobile");
 const [IDGenre, IDGenreAttrs] = defineField("IDGenre");
 const [IDSourceEnergie, IDSourceEnergieAttrs] = defineField("IDSourceEnergie");
-const [IDCategorie, IDCategorieAttrs] = defineField("IDCategorie");
 const [IDLesSocietes, IDLesSocietesAttrs] = defineField("IDLesSocietes");
 const [nom, nomAttrs] = defineField("nom");
 const [Couleur, CouleurAttrs] = defineField("Couleur");
@@ -404,6 +393,7 @@ const getMarque = useMarqueAutomobile();
 const getType = useTypeAutomobile();
 const getProprietaire = useProprietaire();
 const getSociete = useSociete();
+const getNature = useNature();
 
 interface Option {
   value: number | string;
@@ -416,6 +406,7 @@ const optionMarque = ref<Option[]>([]);
 const optionType = ref<Option[]>([]);
 const optionProprietaire = ref<Option[]>([]);
 const optionSociete = ref<Option[]>([]);
+const optionCategorie = ref<Option[]>([]);
 
 onMounted(async () => {
   await getDepartement.fetchDepartement();
@@ -424,6 +415,7 @@ onMounted(async () => {
   await getType.fetchTypeAutomobile();
   await getProprietaire.fetchProprietaire();
   await getSociete.fetchSociete();
+
   optionsDepartement.value = getDepartement.departement.map((item) => ({
     value: item.IDDEPARTEMENT,
     label: item.NomDepartement,
@@ -440,6 +432,7 @@ onMounted(async () => {
     value: item.IDTypeAutomobile,
     label: item.NomType,
   }));
+
   optionProprietaire.value = getProprietaire.proprietaire.map((item) => ({
     value: item.IDProprietaire,
     label: item.Nom + " " + item.Prenom,
@@ -447,6 +440,48 @@ onMounted(async () => {
   optionSociete.value = getSociete.societe.map((item) => ({
     value: item.IDLesSocietes,
     label: item.NomSociete,
+  }));
+});
+
+// Observateur pour IDGenre
+watch(IDGenre, async (newValue, oldValue) => {
+  IDGenre.value = newValue;
+  await getNature.fetchNature(
+    IDGenre.value,
+    IDTypeAutomobile.value,
+    IDSourceEnergie.value
+  );
+  optionCategorie.value = getNature.nature.map((item) => ({
+    value: item.IDProduit,
+    label: item.Libelle,
+  }));
+});
+
+// Observateur pour IDTypeAutomobile
+watch(IDTypeAutomobile, async (newValue, oldValue) => {
+  IDTypeAutomobile.value = newValue;
+  await getNature.fetchNature(
+    IDGenre.value,
+    IDTypeAutomobile.value,
+    IDSourceEnergie.value
+  );
+  optionCategorie.value = getNature.nature.map((item) => ({
+    value: item.IDProduit,
+    label: item.Libelle,
+  }));
+});
+
+// Observateur pour IDSourceEnergie
+watch(IDSourceEnergie, async (newValue, oldValue) => {
+  IDSourceEnergie.value = newValue;
+  await getNature.fetchNature(
+    IDGenre.value,
+    IDTypeAutomobile.value,
+    IDSourceEnergie.value
+  );
+  optionCategorie.value = getNature.nature.map((item) => ({
+    value: item.IDProduit,
+    label: item.Libelle,
   }));
 });
 
@@ -469,9 +504,11 @@ const createAutomobile = useAutomobile();
 const onSubmit = !values
   ? handleSubmit(async (values) => {
       loading.value = true;
-      console.log("Les datas : ", values);
+      const IDCategorie = { IDCategorie: 1 };
+      const data = { ...values, ...IDCategorie };
+      console.log("Les datas : ", data);
       try {
-        let response = await createAutomobile.createAutomobile(values);
+        let response = await createAutomobile.createAutomobile(data);
         console.log(response);
         getSuccess("L'automobile a été ajouter avec succèss");
         setTimeout(() => {
@@ -485,10 +522,12 @@ const onSubmit = !values
       }
     })
   : handleSubmit(async (value) => {
+      const IDCategorie = { IDCategorie: 1 };
+      const data = { ...value, ...IDCategorie };
       loading.value = true;
       try {
         let response = await createAutomobile.UpdateAutomobile(
-          value,
+          data,
           values.IDAutomobiles
         );
         await RefrehFunction();
@@ -552,7 +591,23 @@ if (values !== undefined) {
   IDProprietaire.value = values.IDProprietaire;
   bTaxiMoto.value = values.bTaxiMoto;
   IDDEPARTEMENT.value = values.IDDEPARTEMENT;
-  IDCategorie.value = values.IDCategorie;
+  IDProduit.value = values.IDProduit;
+  try {
+    const asyncFunction = async () => {
+      await getNature.fetchNature(
+        values.IDGenre,
+        values.IDTypeAutomobile,
+        values.IDSourceEnergie
+      );
+      optionCategorie.value = getNature.nature.map((item) => ({
+        value: item.IDProduit,
+        label: item.Libelle,
+      }));
+    };
+    asyncFunction();
+  } catch (error) {
+    getError((error as any).response?.data?.fault?.detail);
+  }
 } else {
   bTaxiMoto.value = false;
 }

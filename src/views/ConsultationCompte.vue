@@ -16,7 +16,7 @@
               v-model="codeCompte"
               :cacher="true"
               :uppercase="true"
-              placeholder="Entrer le Compte "
+              placeholder="Numéro de compte"
             />
           </div>
         </div>
