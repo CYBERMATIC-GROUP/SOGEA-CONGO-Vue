@@ -11,7 +11,8 @@
               label="Immatriculation "
               type="text"
               :readonly="!modif"
-              id="Immatriculation "
+              id="Immatriculation"
+              :uppercase="true"
               v-model="Immatriculation"
               :valid="errors.Immatriculation"
               v-bind="ImmatriculationAttrs"
@@ -25,6 +26,7 @@
               type="text"
               :readonly="!modif"
               id="Numero serie"
+              :uppercase="true"
               v-model="NumeroSerie"
               :valid="errors.NumeroSerie"
               v-bind="NumeroSerieAttrs"
@@ -40,6 +42,7 @@
               type="text"
               :readonly="!modif"
               id="Identifiant carte"
+              :cacher="true"
               v-model="IdentifiantCarte"
               :valid="errors.IdentifiantCarte"
               v-bind="IdentifiantCarteAttrs"
@@ -62,7 +65,12 @@
           </div>
         </div>
         <div class="flex flex-row space-x-5 mt-5">
-          <div class="w-full">
+          <div class="w-full relative">
+            <span
+              v-if="optionMarque.length < 1"
+              class="absolute top-8 left-[53%]"
+              ><a-spin
+            /></span>
             <InputForm
               label="Marque"
               type="select"
@@ -77,7 +85,10 @@
             />
             <span class="text-red-color">{{ errors.IDMarqueAutomobile }}</span>
           </div>
-          <div class="w-full">
+          <div class="w-full relative">
+            <span v-if="optionType.length < 1" class="absolute top-8 left-[75%]"
+              ><a-spin
+            /></span>
             <InputForm
               label="Type automobile"
               type="select"
@@ -96,7 +107,10 @@
     </div>
     <div class="flex-1 mt-5">
       <div class="flex flex-row space-x-5">
-        <div class="w-full">
+        <div class="w-full relative">
+          <span v-if="optionGenre.length < 1" class="absolute top-8 left-[53%]"
+            ><a-spin
+          /></span>
           <InputForm
             label="Genre"
             type="select"
@@ -137,9 +151,14 @@
           />
           <span class="text-red-color">{{ errors.IDSourceEnergie }}</span>
         </div>
-        <div class="w-full">
+        <div class="w-full relative">
+          <span
+            v-if="optionCategorie.length < 1"
+            class="absolute top-8 left-[62%]"
+            ><a-spin
+          /></span>
           <InputForm
-            label="Catégorie en Nature de prime"
+            label="Nature de prime"
             type="select"
             :readonly="!modif"
             id="Categorie"
@@ -189,6 +208,7 @@
             v-model="nom"
             :valid="errors.nom"
             v-bind="nomAttrs"
+            @click="ValeurDefaut"
             id="Nom du véhicule"
             placeholder="Entrer le Nom du véhicule"
           />
@@ -320,9 +340,7 @@ const { errors, handleSubmit, defineField } = useForm({
     NumeroSerie: yup
       .string()
       .required("Veuillez saisir votre numéro de série."),
-    IdentifiantCarte: yup
-      .string()
-      .required("Veuillez saisir votre identifiant de carte."),
+    IdentifiantCarte: yup.string(),
     AnneeConstruction: yup
       .string()
       .required("Veuillez saisir l'année de construction."),
@@ -383,6 +401,37 @@ function formatDateISO(date: any) {
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
+
+const nomMarque = ref("");
+const nomType = ref("");
+
+watch(IDMarqueAutomobile, async (newValue, oldValue) => {
+  optionMarque.value = getMarque.marqueAutomobile.map((item) => ({
+    value: item.IDMarqueAutomobile,
+    label: item.Marque,
+  }));
+
+  let objectSelect = optionMarque.value.find(
+    (element) => element.value == IDMarqueAutomobile.value
+  );
+  nomMarque.value = objectSelect?.label + "-";
+});
+
+watch(IDTypeAutomobile, async (newValue, oldValue) => {
+  optionType.value = getType.typeAutomobile.map((item) => ({
+    value: item.IDTypeAutomobile,
+    label: item.NomType,
+  }));
+
+  let objectSelect = optionType.value.find(
+    (element) => element.value == IDTypeAutomobile.value
+  );
+  nomType.value = String(objectSelect?.label);
+});
+
+const ValeurDefaut = () => {
+  nom.value = nomMarque.value + nomType.value;
+};
 
 // Utiliser une référence pour stocker la date formatée au format ISO 8601
 DateDelivrance.value = formatDateISO(new Date());
