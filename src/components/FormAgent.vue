@@ -12,16 +12,16 @@
       <div class="overflow-y-auto">
         <TabsContent value="Informations Générales" class="h-[52vh]">
           <div class="flex flex-row justify-between px-5 border">
-            <div class="flex pt-5 w-[25rem] items-center space-x-6 border-r">
-              <div class="shrink-0">
+            <div class="pt-5 w-[25rem] items-center space-x-6 border-r">
+              <div class="shrink-0 w-full flex justify-center">
                 <img
                   :src="previewImg"
-                  class="h-16 w-16 object-cover rounded-full"
+                  class="size-[10rem] object-cover rounded-full"
                   alt="Current profile photo"
                 />
               </div>
               <label class="block">
-                <span class="sr-only">Choose profile photo</span>
+                <span class="sr-only">Choisir une photo de profil</span>
                 <InputForm
                   type="file"
                   :readonly="!modif"
@@ -872,11 +872,10 @@ const IDagent = ref();
 
 if (storageAdherentString !== null && !update) {
   const storageAdherent = JSON.parse(storageAdherentString);
+
   try {
     const asyncFunction = async () => {
       let response = await getAgent.getOne(storageAdherent.IDagent);
-      previewImg.value =
-        storageAdherent.Photo == "" ? profileImg : response.Photo;
       IDagent.value = response.IDagent;
       Nom.value = response.Nom;
       Prenom.value = response.Prenom;
@@ -924,6 +923,17 @@ if (storageAdherentString !== null && !update) {
   } catch (error) {
     getError((error as any).response?.data?.fault?.detail);
   }
+
+  try {
+    const asyncPhoto = async () => {
+      let response = await getAgent.photoAgent(storageAdherent.IDagent);
+      previewImg.value = response.Photo;
+      console.log(previewImg.value);
+    };
+    asyncPhoto();
+  } catch (error) {
+    getError((error as any).response?.data?.fault?.detail);
+  }
 } else {
   bDroitRealiserControle.value = false;
   bDroitEncaisser.value = false;
@@ -968,9 +978,12 @@ const onSubmit = update
     })
   : handleSubmit(async (value) => {
       loading.value = true;
+
+      const Photo = { Photo: previewImgData.value };
+      const donne = { ...Photo, ...value };
       console.log("Mise à jours : ", value);
       try {
-        let response = await getAgent.updateAgent(IDagent.value, value);
+        let response = await getAgent.updateAgent(IDagent.value, donne);
         await RefrehFunction();
         updateopenUpdate(false);
         loading.value = false;

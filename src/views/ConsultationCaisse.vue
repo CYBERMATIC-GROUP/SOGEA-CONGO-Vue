@@ -128,6 +128,11 @@
       </div>
     </CardContent>
   </Card>
+  <Dialog v-model:open="selectDate">
+    <DialogContent class="min-w-[30rem] bg-red-300 border border-red-300">
+      <p>Veillez sélectionner la période.</p>
+    </DialogContent>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
@@ -154,6 +159,7 @@ const pageSize = ref(5);
 const handleChangePageSize = (current: any, size: any) => {
   pageSize.value = size;
 };
+const selectDate = ref(false);
 const paginationText = {
   items_per_page: "éléments / page", // Custom text for "items per page" part
 };
@@ -185,9 +191,6 @@ const year = parseInt(dateString.substring(0, 4));
 const month = parseInt(dateString.substring(4, 6)) - 1; // Soustraire 1 car les mois sont indexés à partir de 0
 const day = parseInt(dateString.substring(6, 8));
 const datePreRemplie = new Date(year, month, day);
-dateDebut.value = formatDateISO(datePreRemplie);
-
-dateFin.value = formatDateISO(new Date());
 
 const { errors, handleSubmit, defineField } = useForm({
   validationSchema: yup.object({
@@ -205,23 +208,27 @@ const DefaulValue = {
 };
 
 const afficher = async () => {
-  chargement.value = true;
-  loading.value = true;
-  try {
-    await compte.fetchCaisse({
-      DateDebut: dateDebut.value,
-      "DateFin ": dateFin.value,
-      IDCAISSE: IDCAISSE.value,
-      nModePaiment: 1,
-    });
-    Compte.value = compte.ecriture;
-    console.log(Compte.value);
-    filterCompte();
-    loading.value = false;
-    chargement.value = false;
-  } catch (error) {
-    loading.value = false;
-    console.error((error as any).response?.data?.message);
+  if (dateDebut.value !== undefined) {
+    chargement.value = true;
+    loading.value = true;
+    try {
+      await compte.fetchCaisse({
+        DateDebut: dateDebut.value,
+        "DateFin ": dateFin.value,
+        IDCAISSE: IDCAISSE.value,
+        nModePaiment: 1,
+      });
+      Compte.value = compte.ecriture;
+      console.log(Compte.value);
+      filterCompte();
+      loading.value = false;
+      chargement.value = false;
+    } catch (error) {
+      loading.value = false;
+      console.error((error as any).response?.data?.message);
+    }
+  } else {
+    selectDate.value = true;
   }
 };
 

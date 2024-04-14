@@ -3,12 +3,22 @@ import { api } from "../axios/axios";
 import type {Automobile} from "@/model/automobile"
 const EndPoint = "/sogeacongo/v1/Automobiles"
 const EndPointRecuperation = "/sogeacongo/v1/AutomobilesGetListe"
+const endPointPhoto = "/sogeacongo/v1/PHOTO_Get_Photo_Automobile/"
 
 export const useAutomobile = defineStore('automobile', {
   state: () => ({
     automobile: [] as Automobile[]
   }),
   actions: {
+    async photoAutomobile(id : number) {
+      try { 
+        const response = await api.get(endPointPhoto+id);
+        return response.data; 
+      } catch (error) {
+        console.error('Erreur lors de la recuperation de la photo de l\'automobile', error);
+        throw error;
+      }
+    },
     async fetchAutomobile(data : object) {
       try { 
         const response = await api.post(EndPointRecuperation, data);

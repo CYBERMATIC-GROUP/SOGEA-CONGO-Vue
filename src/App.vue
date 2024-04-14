@@ -25,14 +25,11 @@ watch(
     <div class="h-[4.313rem]"><Header /></div>
 
     <div class="flex flex-row mt-10">
-      <div class="mx-6 w-[18rem] h-full pb-32 fixed z-20">
-        <SideBar
-          :class="[
-            menuActive
-              ? 'transition-all duration-500'
-              : 'hidden transition-all duration-500',
-          ]"
-        />
+      <div
+        v-if="menuActive"
+        class="mx-6 transition-all duration-500 w-[18rem] h-full pb-32 fixed z-20"
+      >
+        <SideBar />
       </div>
       <div
         :class="[

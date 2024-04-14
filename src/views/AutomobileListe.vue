@@ -46,10 +46,14 @@
         </div>
         <div>
           <Dialog v-if="open" v-model:open="open">
-            <updateAutomobile
-              @RefrehFunction="fetchAutomobile"
-              @updateopenUpdate="handleUpdate"
-            />
+            <DialogContent class="min-w-[80rem] h-[35rem] overflow-y-auto">
+              <CardContent class="bg-white">
+                <updateAutomobile
+                  @RefrehFunction="fetchAutomobile"
+                  @updateopenUpdate="handleUpdate"
+                />
+              </CardContent>
+            </DialogContent>
           </Dialog>
           <Dialog v-if="deleteOpen" v-model:open="deleteOpen">
             <deleteAutomobile

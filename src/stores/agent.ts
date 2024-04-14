@@ -2,12 +2,22 @@ import { defineStore } from 'pinia';
 import { api } from "../axios/axios";
 import type { Agent } from '@/model/agent';
 const EndPoint = "/sogeacongo/v1/Agents"
+const endpointPhoto = "/sogeacongo/v1/PHOTO_Get_Photo_Agent/"
 
 export const useAgent= defineStore('agent', {
     state: () => ({
         agent: [] as Agent[]
       }),
   actions: {
+    async photoAgent(id : number) {
+      try { 
+        const response = await api.get(endpointPhoto+id);
+        return response.data; 
+      } catch (error) {
+        console.error('Erreur lors de la recuperation de la photo de l\'agent', error);
+        throw error;
+      }
+    },
     async fetchAgent() {
       try { 
         const response = await api.get(EndPoint);

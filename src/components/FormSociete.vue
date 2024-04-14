@@ -9,7 +9,7 @@
         />
       </div>
       <label class="block">
-        <span class="sr-only">Choose profile photo</span>
+        <span class="sr-only">Choisir une photo de profil</span>
         <InputForm
           type="file"
           :readonly="!modif"

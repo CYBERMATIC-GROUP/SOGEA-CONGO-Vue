@@ -1,12 +1,10 @@
 <template>
-  <DialogContent class="min-w-[70rem]">
-    <FormAutomobile
-      @RefrehFunction="fetchProprietaire"
-      @updateopenUpdate="handleUpdateOpenDelete"
-      :values="data"
-      :update="false"
-    />
-  </DialogContent>
+  <FormAutomobile
+    @RefrehFunction="fetchProprietaire"
+    @updateopenUpdate="handleUpdateOpenDelete"
+    :values="data"
+    :update="false"
+  />
 </template>
 
 <script setup lang="ts">

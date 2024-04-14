@@ -59,7 +59,7 @@
                 class="w-full h-[2rem] select-none flex justify-center items-center"
               >
                 <h1 class="font-[600] text-white text-[1.3rem]">
-                  Modifier une station point de vente
+                  Modifier un agent
                 </h1>
               </div>
               <CardContent class="bg-white">

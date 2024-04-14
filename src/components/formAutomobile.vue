@@ -1,9 +1,24 @@
 <template>
   <form @submit="onSubmit">
     <div class="flex flex-row items-center space-x-5 pt-5">
-      <span>
-        <img :src="Voirure" alt="Voirure" class="w-[16rem]" />
-      </span>
+      <div class="pt-5 w-[17rem] items-center space-x-6 border-r">
+        <div class="shrink-0 w-full flex justify-center">
+          <img
+            :src="previewImg"
+            class="h-[10rem] w-[16rem] object-cover"
+            alt="Current profile photo"
+          />
+        </div>
+        <label class="block">
+          <span class="sr-only">Choisir une photo de profil</span>
+          <InputForm
+            type="file"
+            :readonly="!modif"
+            :cacher="true"
+            @change="loadFile"
+          />
+        </label>
+      </div>
       <div class="flex-1">
         <div class="flex flex-row space-x-5">
           <div class="w-full">
@@ -66,9 +81,7 @@
         </div>
         <div class="flex flex-row space-x-5 mt-5">
           <div class="w-full relative">
-            <span
-              v-if="optionMarque.length < 1"
-              class="absolute top-8 left-[53%]"
+            <span v-if="loadingMarque" class="absolute top-8 left-[53%]"
               ><a-spin
             /></span>
             <InputForm
@@ -86,7 +99,7 @@
             <span class="text-red-color">{{ errors.IDMarqueAutomobile }}</span>
           </div>
           <div class="w-full relative">
-            <span v-if="optionType.length < 1" class="absolute top-8 left-[75%]"
+            <span v-if="loadingType" class="absolute top-8 left-[75%]"
               ><a-spin
             /></span>
             <InputForm
@@ -108,7 +121,7 @@
     <div class="flex-1 mt-5">
       <div class="flex flex-row space-x-5">
         <div class="w-full relative">
-          <span v-if="optionGenre.length < 1" class="absolute top-8 left-[53%]"
+          <span v-if="loadingGenre" class="absolute top-8 left-[53%]"
             ><a-spin
           /></span>
           <InputForm
@@ -152,9 +165,7 @@
           <span class="text-red-color">{{ errors.IDSourceEnergie }}</span>
         </div>
         <div class="w-full relative">
-          <span
-            v-if="optionCategorie.length < 1"
-            class="absolute top-8 left-[62%]"
+          <span v-if="loadingCategorie" class="absolute top-8 left-[62%]"
             ><a-spin
           /></span>
           <InputForm
@@ -331,6 +342,7 @@ import type { Proprietaire } from "@/model/proprietaire";
 import router from "@/router";
 import { useRoute } from "vue-router";
 import { useNature } from "@/stores/naturePrime";
+import profileImg from "../assets/img/car.jpeg";
 
 const { errors, handleSubmit, defineField } = useForm({
   validationSchema: yup.object({
@@ -402,6 +414,25 @@ function formatDateISO(date: any) {
   return `${year}-${month}-${day}`;
 }
 
+const previewImg = ref(profileImg);
+const previewImgData = ref<string>("");
+
+const loadFile = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      previewImgData.value = reader.result as string;
+      previewImg.value = reader.result as string;
+    };
+
+    reader.readAsDataURL(file); // Lire le contenu du fichier en tant que base64
+  }
+};
+
 const nomMarque = ref("");
 const nomType = ref("");
 
@@ -443,6 +474,7 @@ const getType = useTypeAutomobile();
 const getProprietaire = useProprietaire();
 const getSociete = useSociete();
 const getNature = useNature();
+const loadingCategorie = ref(false);
 
 interface Option {
   value: number | string;
@@ -456,14 +488,27 @@ const optionType = ref<Option[]>([]);
 const optionProprietaire = ref<Option[]>([]);
 const optionSociete = ref<Option[]>([]);
 const optionCategorie = ref<Option[]>([]);
+const loadingMarque = ref(true);
+const loadingGenre = ref(true);
+const loadingType = ref(true);
 
 onMounted(async () => {
   await getDepartement.fetchDepartement();
-  await getGenre.fetchGenre();
-  await getMarque.fetchMarqueAutomobile();
-  await getType.fetchTypeAutomobile();
+  let responseGenre = await getGenre.fetchGenre();
+  let response = await getMarque.fetchMarqueAutomobile();
+  let responseType = await getType.fetchTypeAutomobile();
   await getProprietaire.fetchProprietaire();
   await getSociete.fetchSociete();
+  if (responseType) {
+    loadingType.value = false;
+  }
+  if (responseGenre) {
+    loadingGenre.value = false;
+  }
+
+  if (response) {
+    loadingMarque.value = false;
+  }
 
   optionsDepartement.value = getDepartement.departement.map((item) => ({
     value: item.IDDEPARTEMENT,
@@ -495,11 +540,16 @@ onMounted(async () => {
 // Observateur pour IDGenre
 watch(IDGenre, async (newValue, oldValue) => {
   IDGenre.value = newValue;
-  await getNature.fetchNature(
+  loadingCategorie.value = true;
+  let response = await getNature.fetchNature(
     IDGenre.value,
     IDTypeAutomobile.value,
     IDSourceEnergie.value
   );
+  console.log("++++++++++++++++++++++++++++++++++++", response);
+  if (response) {
+    loadingCategorie.value = false;
+  }
   optionCategorie.value = getNature.nature.map((item) => ({
     value: item.IDProduit,
     label: item.Libelle,
@@ -509,11 +559,15 @@ watch(IDGenre, async (newValue, oldValue) => {
 // Observateur pour IDTypeAutomobile
 watch(IDTypeAutomobile, async (newValue, oldValue) => {
   IDTypeAutomobile.value = newValue;
-  await getNature.fetchNature(
+  loadingCategorie.value = true;
+  let response = await getNature.fetchNature(
     IDGenre.value,
     IDTypeAutomobile.value,
     IDSourceEnergie.value
   );
+  if (response) {
+    loadingCategorie.value = false;
+  }
   optionCategorie.value = getNature.nature.map((item) => ({
     value: item.IDProduit,
     label: item.Libelle,
@@ -523,11 +577,15 @@ watch(IDTypeAutomobile, async (newValue, oldValue) => {
 // Observateur pour IDSourceEnergie
 watch(IDSourceEnergie, async (newValue, oldValue) => {
   IDSourceEnergie.value = newValue;
-  await getNature.fetchNature(
+  loadingCategorie.value = true;
+  let response = await getNature.fetchNature(
     IDGenre.value,
     IDTypeAutomobile.value,
     IDSourceEnergie.value
   );
+  if (response) {
+    loadingCategorie.value = false;
+  }
   optionCategorie.value = getNature.nature.map((item) => ({
     value: item.IDProduit,
     label: item.Libelle,
@@ -553,8 +611,11 @@ const createAutomobile = useAutomobile();
 const onSubmit = !values
   ? handleSubmit(async (values) => {
       loading.value = true;
+      const Photo = { Photo: previewImgData.value };
+
       const IDCategorie = { IDCategorie: 1 };
-      const data = { ...values, ...IDCategorie };
+      const data = { ...values, ...IDCategorie, ...Photo };
+
       console.log("Les datas : ", data);
       try {
         let response = await createAutomobile.createAutomobile(data);
@@ -572,7 +633,8 @@ const onSubmit = !values
     })
   : handleSubmit(async (value) => {
       const IDCategorie = { IDCategorie: 1 };
-      const data = { ...value, ...IDCategorie };
+      const Photo = { Photo: previewImgData.value };
+      const data = { ...values, ...IDCategorie, ...Photo };
       loading.value = true;
       try {
         let response = await createAutomobile.UpdateAutomobile(
@@ -623,24 +685,33 @@ const Modifier = () => {
 };
 
 if (values !== undefined) {
-  IDDEPARTEMENT.value = values.IDDEPARTEMENT;
-  IDLesSocietes.value = values.IDLesSocietes;
-  Immatriculation.value = values.Immatriculation;
-  NumeroSerie.value = values.NumeroSerie;
-  IdentifiantCarte.value = values.IdentifiantCarte;
-  AnneeConstruction.value = values.AnneeConstruction;
-  IDMarqueAutomobile.value = values.IDMarqueAutomobile;
-  IDTypeAutomobile.value = values.IDTypeAutomobile;
-  IDGenre.value = values.IDGenre;
-  IDSourceEnergie.value = values.IDSourceEnergie;
-  nom.value = values.nom;
-  Couleur.value = values.Couleur;
-  PuissanceMoteur.value = values.PuissanceMoteur;
-  DateDelivrance.value = values.DateDelivrance;
-  IDProprietaire.value = values.IDProprietaire;
-  bTaxiMoto.value = values.bTaxiMoto;
-  IDDEPARTEMENT.value = values.IDDEPARTEMENT;
-  IDProduit.value = values.IDProduit;
+  try {
+    const asyncData = async () => {
+      let response = await createAutomobile.OneAutomobile(values.IDAutomobiles);
+      IDDEPARTEMENT.value = response.IDDEPARTEMENT;
+      IDLesSocietes.value = response.IDLesSocietes;
+      Immatriculation.value = response.Immatriculation;
+      NumeroSerie.value = response.NumeroSerie;
+      IdentifiantCarte.value = response.IdentifiantCarte;
+      AnneeConstruction.value = response.AnneeConstruction;
+      IDMarqueAutomobile.value = response.IDMarqueAutomobile;
+      IDTypeAutomobile.value = response.IDTypeAutomobile;
+      IDGenre.value = response.IDGenre;
+      IDSourceEnergie.value = response.IDSourceEnergie;
+      nom.value = response.nom;
+      Couleur.value = response.Couleur;
+      PuissanceMoteur.value = response.PuissanceMoteur;
+      DateDelivrance.value = response.DateDelivrance;
+      IDProprietaire.value = response.IDProprietaire;
+      bTaxiMoto.value = response.bTaxiMoto;
+      IDDEPARTEMENT.value = response.IDDEPARTEMENT;
+      IDProduit.value = response.IDProduit;
+    };
+    asyncData();
+  } catch (error) {
+    getError((error as any).response?.data?.fault?.detail);
+  }
+
   try {
     const asyncFunction = async () => {
       await getNature.fetchNature(
@@ -648,12 +719,26 @@ if (values !== undefined) {
         values.IDTypeAutomobile,
         values.IDSourceEnergie
       );
+
       optionCategorie.value = getNature.nature.map((item) => ({
         value: item.IDProduit,
         label: item.Libelle,
       }));
     };
     asyncFunction();
+  } catch (error) {
+    getError((error as any).response?.data?.fault?.detail);
+  }
+
+  try {
+    const asyncPhoto = async () => {
+      let response = await createAutomobile.photoAutomobile(
+        values.IDAutomobiles
+      );
+      previewImg.value = response.Photo;
+      console.log(previewImg.value);
+    };
+    asyncPhoto();
   } catch (error) {
     getError((error as any).response?.data?.fault?.detail);
   }

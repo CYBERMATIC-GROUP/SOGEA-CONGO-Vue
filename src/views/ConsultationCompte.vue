@@ -98,6 +98,11 @@
       </div>
     </CardContent>
   </Card>
+  <Dialog v-model:open="selectDate">
+    <DialogContent class="min-w-[30rem] bg-red-300 border border-red-300">
+      <p>Veillez sélectionner la période.</p>
+    </DialogContent>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
@@ -116,6 +121,7 @@ import InputForm from "../components/inputForm.vue";
 import type { Ecriture } from "@/model/Ecriture";
 import { useCompte } from "@/stores/compte";
 
+const selectDate = ref(false);
 const pageSizeOptions = ref(["5", "10", "20", "50"]);
 const pageSize = ref(5);
 const handleChangePageSize = (current: any, size: any) => {
@@ -153,9 +159,8 @@ const year = parseInt(dateString.substring(0, 4));
 const month = parseInt(dateString.substring(4, 6)) - 1; // Soustraire 1 car les mois sont indexés à partir de 0
 const day = parseInt(dateString.substring(6, 8));
 const datePreRemplie = new Date(year, month, day);
-dateDebut.value = formatDateISO(datePreRemplie);
+// dateDebut.value = formatDateISO(datePreRemplie);
 
-dateFin.value = formatDateISO(new Date());
 const codeCompte = ref("");
 
 const DefaulValue = {
@@ -166,24 +171,28 @@ const DefaulValue = {
 };
 
 const afficher = async () => {
-  chargement.value = true;
-  loading.value = true;
-  try {
-    let response = await compte.fetchCompte({
-      DateDebut: dateDebut.value,
-      "DateFin ": dateFin.value,
-      CodeCompte: codeCompte.value,
-      nModePaiment: 1,
-    });
-    Compte.value = compte.ecriture;
-    totaux.value = response.Totaux;
-    console.log(Compte.value);
-    filterCompte();
-    loading.value = false;
-    chargement.value = false;
-  } catch (error) {
-    loading.value = false;
-    console.error((error as any).response?.data?.message);
+  if (dateDebut.value !== undefined) {
+    chargement.value = true;
+    loading.value = true;
+    try {
+      let response = await compte.fetchCompte({
+        DateDebut: dateDebut.value,
+        "DateFin ": dateFin.value,
+        CodeCompte: codeCompte.value,
+        nModePaiment: 1,
+      });
+      Compte.value = compte.ecriture;
+      totaux.value = response.Totaux;
+      console.log(Compte.value);
+      filterCompte();
+      loading.value = false;
+      chargement.value = false;
+    } catch (error) {
+      loading.value = false;
+      console.error((error as any).response?.data?.message);
+    }
+  } else {
+    selectDate.value = true;
   }
 };
 
