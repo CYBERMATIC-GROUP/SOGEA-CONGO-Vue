@@ -12,7 +12,10 @@
         type="single"
         :collapsible="true"
       >
-        <template v-for="item in accordionItems" :key="item.value">
+        <template
+          v-for="item in propretaire ? accordionItemsAdherent : accordionItems"
+          :key="item.value"
+        >
           <AccordionItem :value="item.value">
             <AccordionHeader class="flex">
               <AccordionTrigger
@@ -60,8 +63,30 @@ import {
   AccordionRoot,
   AccordionTrigger,
 } from "radix-vue";
+import { ref } from "vue";
 
-import { accordionItems } from "@/common/accordionItems";
+import {
+  accordionItems,
+  accordionItemsAdherent,
+} from "@/common/accordionItems";
+
+const storageAdherentString: string | null = localStorage.getItem("Agent");
+const prenom = ref("");
+const propretaire = ref(false);
+
+if (storageAdherentString !== null) {
+  const storageAdherent: { Prenom: string; Proprietaire: Proprietaire } =
+    JSON.parse(storageAdherentString);
+  prenom.value = storageAdherent.Prenom;
+  console.log("Agent Prénom:", storageAdherent);
+  if (storageAdherent.Proprietaire) {
+    propretaire.value = true;
+    prenom.value = storageAdherent.Proprietaire.Prenom;
+  }
+} else {
+  console.log("Aucun agent trouvé dans le stockage local.");
+}
 
 import { ChevronRight, Home, Circle } from "lucide-vue-next";
+import type { Proprietaire } from "@/model/proprietaire";
 </script>

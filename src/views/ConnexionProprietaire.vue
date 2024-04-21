@@ -6,14 +6,14 @@
       </CardHeader>
       <CardContent>
         <h1 class="text-center text-2xl font-[600] text-bg-primary">Bienvue</h1>
-        <h2 class="text-center pt-1 text-lg mb-5 font-[600]">
-          Veuillez-vous connecter!
+        <h2 class="text-center pt-1 text-lg mb-5 font-[500]">
+          Espace de connexion Propriétaire véhicule
         </h2>
 
         <form @submit="onSubmit">
           <div class="mt-3 flex flex-col space-y-3 select-none">
             <Input
-              label="Login"
+              label="Identifiant Mobile"
               type="text"
               inputType="input"
               placeholder=""
@@ -46,17 +46,6 @@
           </div>
         </form>
       </CardContent>
-      <CardFooter>
-        <div class="flex flex-row w-full space-x-10 justify-between">
-          <router-link to="/connexion-proprietaire">
-            <Button class="w-full bg-bg-secondary"
-              >Espace proprietaire</Button
-            ></router-link
-          >
-
-          <Button class="w-full bg-bg-secondary">Espace Station</Button>
-        </div>
-      </CardFooter>
     </Card>
 
     <Dialog v-model:open="modal">
@@ -128,6 +117,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import type { Login } from "@/model/login";
+import type { LoginProprietaire } from "@/model/loginProprietaire";
 import { Button } from "@/components/ui/button";
 import { useForm } from "vee-validate";
 import * as yup from "yup";
@@ -176,18 +166,18 @@ const loading = ref(false);
 
 const loginStore = useLoginStore();
 
-const MaData = ref<Login>({} as Login);
+const MaData = ref<LoginProprietaire>({} as LoginProprietaire);
 
 const onSubmit = handleSubmit(async (values) => {
   loading.value = true;
-  const login = { login: values.login.toUpperCase() };
-  const password = { motDePasse: values.password };
-  const data = { ...login, ...password };
+  const login = { Login: values.login.toUpperCase() };
+  const motDePasses = { MotDePasse: values.password };
+  const data = { ...login, ...motDePasses };
   MaData.value = data;
   console.log(data);
-  localStorage.setItem("UTILISATEUER_LOGIN", data.login);
+  localStorage.setItem("UTILISATEUER_LOGIN", data.Login);
   try {
-    let response = await loginStore.login(data);
+    let response = await loginStore.loginPropiretaire(data);
     console.log(response);
     localStorage.setItem("Agent", JSON.stringify(response));
     authStore.setConnected(true);
@@ -196,7 +186,7 @@ const onSubmit = handleSubmit(async (values) => {
     loading.value = false;
     console.error(error);
     if ((error as any).response?.status == 401) {
-      localStorage.setItem("UTILISATEUER_TOKEN", data.login);
+      localStorage.setItem("UTILISATEUER_TOKEN", data.Login);
       ouvert.value = true;
       getSuccess("L'identifiant est correct.");
     }
@@ -219,10 +209,10 @@ const ActionModal1 = () => {
 };
 
 const onConnexion = newHandleSubmit(async (values) => {
-  loading.value = true;
-  localStorage.setItem("UTILISATEUER_TOKEN", values.token);
+  //   loading.value = true;
+  //    localStorage.setItem("UTILISATEUER_TOKEN", values.token);
   try {
-    let response = await loginStore.login(MaData.value);
+    let response = await loginStore.loginPropiretaire(MaData.value);
     console.log(response);
     getSuccess("Vous serez redirigé vers le tableau de bord.");
     authStore.setConnected(true);

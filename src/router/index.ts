@@ -24,6 +24,7 @@ import PointDeVenteListe from '@/views/PointDeVenteListe.vue';
 import AgentListe from '@/views/AgentListe.vue';
 import ConsultationCaisse from '@/views/ConsultationCaisse.vue';
 import ConsultationCompte from '@/views/ConsultationCompte.vue';
+import ConnexionProprietaire from '@/views/ConnexionProprietaire.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +39,11 @@ const router = createRouter({
       path: '/connexion',
       name: 'connexion',
       component: Connexion,
+    },
+    {
+      path: '/connexion-proprietaire',
+      name: 'connexion-proprietaire',
+      component: ConnexionProprietaire,
     },
     {
       path: '/consultation-compte',

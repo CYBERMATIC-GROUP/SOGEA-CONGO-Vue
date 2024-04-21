@@ -7,7 +7,7 @@
     <Card class="w-full shadow-md bg-[#73B1E7] rounded-xl">
       <div class="w-full h-[2rem] select-none flex justify-center items-center">
         <h1 class="font-[600] text-white text-[1.3rem]">
-          Liste des automobiles
+          {{ propretaire ? "Mes véhicules" : "Liste des automobiles" }}
         </h1>
       </div>
       <CardContent class="bg-white">
@@ -27,7 +27,7 @@
               <Search class="size-6 text-muted-foreground" />
             </span>
           </div>
-          <div class="w-[20rem]">
+          <div v-if="!propretaire" class="w-[20rem]">
             <Dialog v-model:open="openFiltre">
               <DialogTrigger as-child>
                 <Button class="w-full bg-bg-primary">Recherche avancée</Button>
@@ -40,7 +40,7 @@
               </DialogContent>
             </Dialog>
           </div>
-          <router-link to="/automobile" class="w-[20rem]">
+          <router-link v-if="!propretaire" to="/automobile" class="w-[20rem]">
             <Button class="w-full bg-bg-primary">Ajouter un automobile</Button>
           </router-link>
         </div>
@@ -109,8 +109,13 @@ const open = ref(false);
 const deleteOpen = ref(false);
 
 const toggleOpenDelete = (data: any) => {
-  deleteOpen.value = true;
-  sessionStorage.setItem("update", JSON.stringify(data));
+  if (!propretaire.value) {
+    deleteOpen.value = true;
+    sessionStorage.setItem("update", JSON.stringify(data));
+  } else {
+    sessionStorage.setItem("idAutomobile", JSON.stringify(data.IDAutomobiles));
+    router.push({ path: "/liste-souscription" });
+  }
 };
 
 const handleUpdateOpenDelete = (value: any) => {
@@ -130,20 +135,24 @@ const notification = (data: any) => {
 };
 
 const Update = (data: any) => {
-  if (
-    route.path != "/nouvelle-souscription/renouvelement-contrat" &&
-    route.path != "/amortissement"
-  ) {
-    open.value = true;
-    sessionStorage.setItem("updateAutomobile", JSON.stringify(data));
-  } else {
-    sessionStorage.setItem("amortissement", JSON.stringify(data));
-    const storageData = sessionStorage.getItem("amortissement");
-    if (storageData !== null) {
-      const parsedData = JSON.parse(storageData);
-      notification(parsedData);
+  if (!propretaire.value) {
+    if (
+      route.path != "/nouvelle-souscription/renouvelement-contrat" &&
+      route.path != "/amortissement"
+    ) {
+      open.value = true;
+      sessionStorage.setItem("updateAutomobile", JSON.stringify(data));
+    } else {
+      sessionStorage.setItem("amortissement", JSON.stringify(data));
+      const storageData = sessionStorage.getItem("amortissement");
+      if (storageData !== null) {
+        const parsedData = JSON.parse(storageData);
+        notification(parsedData);
+      }
+      router.push({ path: "/amortissement" });
     }
-    router.push({ path: "/amortissement" });
+  } else {
+    alert("Pas encore disponible");
   }
 };
 
@@ -201,20 +210,41 @@ const FilterValue = async (values: any) => {
 
 const searchService = ref("");
 
+const storageAdherentString: string | null = localStorage.getItem("Agent");
+
+const propretaire = ref(false);
+const Vehicule = ref<Automobile[]>([]);
+
 onMounted(() => {
+  if (storageAdherentString !== null) {
+    const storageAdherent: {
+      Vehicule: [];
+    } = JSON.parse(storageAdherentString);
+
+    console.log("Agent Prénom:", storageAdherent);
+    if (storageAdherent.Vehicule) {
+      propretaire.value = true;
+      Vehicule.value = storageAdherent.Vehicule;
+    }
+  } else {
+    console.log("Aucun agent trouvé dans le stockage local.");
+  }
+
   if (
     LePropretaire &&
     route.path == "/nouvelle-souscription/renouvelement-contrat"
   ) {
     const FilterVa = async (values: any) => {
-      try {
-        await getAutomobile.fetchAutomobile(values);
-        automobile.value = getAutomobile.automobile;
-        filterAutomible();
-        openFiltre.value = false;
-        chargement.value = false;
-      } catch (error) {
-        console.error((error as any).response?.data?.message);
+      if (!propretaire.value) {
+        try {
+          await getAutomobile.fetchAutomobile(values);
+          automobile.value = getAutomobile.automobile;
+          filterAutomible();
+          openFiltre.value = false;
+          chargement.value = false;
+        } catch (error) {
+          console.error((error as any).response?.data?.message);
+        }
       }
     };
     FilterVa({ IDProprietaire: LePropretaire });
@@ -224,17 +254,32 @@ onMounted(() => {
 });
 
 function filterAutomible() {
-  visibleProduit.value = automobile.value.filter((automobile) => {
-    return (
-      !searchService.value ||
-      automobile.nom
-        .toLowerCase()
-        .includes(searchService.value.toLowerCase()) ||
-      automobile.Immatriculation.toLowerCase().includes(
-        searchService.value.toLowerCase()
-      )
-    );
-  });
+  if (!propretaire.value) {
+    visibleProduit.value = automobile.value.filter((automobile) => {
+      return (
+        !searchService.value ||
+        automobile.nom
+          .toLowerCase()
+          .includes(searchService.value.toLowerCase()) ||
+        automobile.Immatriculation.toLowerCase().includes(
+          searchService.value.toLowerCase()
+        )
+      );
+    });
+  } else {
+    chargement.value = false;
+    visibleProduit.value = Vehicule.value.filter((automobile) => {
+      return (
+        !searchService.value ||
+        automobile.nom
+          .toLowerCase()
+          .includes(searchService.value.toLowerCase()) ||
+        automobile.Immatriculation.toLowerCase().includes(
+          searchService.value.toLowerCase()
+        )
+      );
+    });
+  }
 }
 
 const columns = [

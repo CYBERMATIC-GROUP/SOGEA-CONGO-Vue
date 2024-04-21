@@ -6,6 +6,7 @@ const endPointSouscription = "/sogeacongo/v1/SoldeCompte"
 const endPointImprime = "/sogeacongo/v1/Imprime_Releve_Compte/"
 const endPointEcheance = "/sogeacongo/v1/Versement_Echeance/"
 const endPointImprimeViniette = "/sogeacongo/v1/Imprime_Viniette_Recto/"
+const endPointSouscriptionAutomobile = "/sogeacongo/v1/Automobiles_Get_Solde/"
 
 
 export const useSouscription = defineStore('souscription', {
@@ -13,6 +14,15 @@ export const useSouscription = defineStore('souscription', {
         sousciption: [] as Souscription[]
       }),
   actions: {
+    async fetchSouscriptionAutombile(idAutombile: number) {
+      try{
+          const response = await api.get(endPointSouscriptionAutomobile+idAutombile);
+          return response.data; 
+        } catch (error) {
+          console.error('Erreur lors de la recuperation des souscriptions', error);
+          throw error;
+        }
+      },
     async fetchSouscription() {
     try{
         const response = await api.post(EndPoint,{IDSOUSCRIPTIONS: 0, IDProduit: 0, Annee: 0, IDAutomobiles: 0, IDProprietaire: 0});

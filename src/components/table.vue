@@ -113,7 +113,9 @@
                       $route.path != '/impression-viniette'
                     "
                     class="font-[400] cursor-pointer hover:bg-[#FAFAFA]"
-                    >Supprimer</DropdownMenuCheckboxItem
+                    >{{
+                      !propretaire ? "Supprimer" : "Assurence"
+                    }}</DropdownMenuCheckboxItem
                   >
                   <DropdownMenuSeparator
                     v-if="
@@ -133,7 +135,11 @@
                     {{
                       $route.path == "/impression-viniette"
                         ? "Sélectionner"
-                        : "Afficher"
+                        : $route.path == "/liste-souscription"
+                        ? "Afficher"
+                        : !propretaire
+                        ? "Afficher"
+                        : "Comptabilité"
                     }}
                   </DropdownMenuCheckboxItem>
                 </DropdownMenuContent>
@@ -225,6 +231,22 @@ function convertirDateEnFrancaisHeure(dateString: any) {
   };
 
   return date.toLocaleDateString("fr-FR", options);
+}
+
+const storageAdherentString: string | null = localStorage.getItem("Agent");
+
+const propretaire = ref(false);
+if (storageAdherentString !== null) {
+  const storageAdherent: {
+    Vehicule: [];
+  } = JSON.parse(storageAdherentString);
+
+  console.log("Agent Prénom:", storageAdherent);
+  if (storageAdherent.Vehicule) {
+    propretaire.value = true;
+  }
+} else {
+  console.log("Aucun agent trouvé dans le stockage local.");
 }
 
 const {

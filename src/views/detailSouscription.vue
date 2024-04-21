@@ -6,7 +6,7 @@
     <CardContent class="bg-white pt-6">
       <div class="flex flex-row space-x-3 px-5">
         <div class="w-[50%]">
-          <div class="border grid grid-cols-1 divide-y-2">
+          <div class="border grid grid-cols-1 divide-y-2 h-[18.5rem]">
             <span class="flex flex-row justify-between px-4 items-center py-1">
               <p>Immatriculation</p>
               <p class="text-black">: {{ data?.Immatriculation }}</p>
@@ -48,7 +48,7 @@
           </div>
         </div>
         <div class="w-[50%]">
-          <div class="border grid grid-cols-1 divide-y-2">
+          <div class="border grid grid-cols-1 divide-y-2 h-[18.5rem]">
             <span class="flex flex-row justify-between px-4 items-center py-1">
               <p>Mensualité</p>
               <p class="text-black">

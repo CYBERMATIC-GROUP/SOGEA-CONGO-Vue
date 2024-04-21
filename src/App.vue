@@ -21,7 +21,11 @@ watch(
 </script>
 
 <template>
-  <div v-if="$route.path != '/connexion'">
+  <div
+    v-if="
+      $route.path != '/connexion' && $route.path != '/connexion-proprietaire'
+    "
+  >
     <div class="h-[4.313rem]"><Header /></div>
 
     <div class="flex flex-row mt-10">

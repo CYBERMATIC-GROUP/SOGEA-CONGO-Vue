@@ -63,18 +63,55 @@ const getsouscription = useSouscription();
 const chargement = ref(true);
 
 const fetchSouscription = async () => {
-  try {
-    await getsouscription.fetchSouscription();
-    souscription.value = getsouscription.sousciption;
-    console.log(souscription.value);
-    filterProprietaire();
-    chargement.value = false;
-  } catch (error) {
-    console.error((error as any).response?.data?.message);
+  if (!propretaire.value) {
+    try {
+      await getsouscription.fetchSouscription();
+      souscription.value = getsouscription.sousciption;
+      console.log(souscription.value);
+      filterProprietaire();
+      chargement.value = false;
+    } catch (error) {
+      console.error((error as any).response?.data?.message);
+    }
+  } else {
+    const storageAdherentString: string | null =
+      sessionStorage.getItem("idAutomobile");
+    const idautomobile = ref(0);
+
+    if (storageAdherentString) {
+      idautomobile.value = Number(storageAdherentString);
+    }
+
+    try {
+      let response = await getsouscription.fetchSouscriptionAutombile(
+        idautomobile.value
+      );
+      souscription.value = response;
+      filterProprietaire();
+      chargement.value = false;
+    } catch (error) {
+      console.error((error as any).response?.data?.message);
+    }
   }
 };
 
-onMounted(fetchSouscription);
+const storageAdherentString: string | null = localStorage.getItem("Agent");
+const propretaire = ref(false);
+
+onMounted(() => {
+  if (storageAdherentString !== null) {
+    const storageAdherent: {
+      Vehicule: [];
+    } = JSON.parse(storageAdherentString);
+    console.log("Agent Prénom:", storageAdherent);
+    if (storageAdherent.Vehicule) {
+      propretaire.value = true;
+    }
+  } else {
+    console.log("Aucun agent trouvé dans le stockage local.");
+  }
+  fetchSouscription();
+});
 
 function filterProprietaire() {
   visibleProduit.value = souscription.value.filter((souscription) => {

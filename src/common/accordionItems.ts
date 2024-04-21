@@ -125,3 +125,63 @@ export const accordionItems : any = [
       ],
     },
   ];
+
+  export const accordionItemsAdherent : any = [
+    {
+      value: "Automobiles",
+      title: "Automobiles",
+      icon: Car,
+      content: [
+        {
+          label: "Liste des automobiles",
+          route: "/liste-automobile",
+        },
+       
+      ],
+    },
+
+    {
+      value: "Comptabilité",
+      title: "Comptabilité",
+      icon: Landmark,
+      content: [
+        {
+          label: "Consultation de compte",
+          route: "#",
+        },
+        {
+          label: "Consultation de caisse",
+          route: "#",
+        },
+      ],
+    },
+    {
+      value: "Statistiques",
+      title: "Statistiques",
+      icon: BarChartHorizontal,
+      content: [
+        {
+          label: "Objectifs",
+          route: "#",
+        },
+        {
+          label: "Revenus",
+          route: "#",
+        },
+      ],
+    },
+    
+    
+    {
+      value: "Position Points Vente",
+      title: "Position Points Vente",
+      icon: MapPin,
+      content: [
+        {
+          label: "Liste des points ventes",
+          route: "#",
+        },
+      ],
+    },
+    
+  ];

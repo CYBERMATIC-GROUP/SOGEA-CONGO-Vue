@@ -16,6 +16,7 @@ import {
 import { menu } from "@/common/menu";
 import router from "@/router";
 import { useMenu } from "@/stores/menu";
+import type { Proprietaire } from "@/model/proprietaire";
 
 const currentMenu = ref("");
 
@@ -43,11 +44,17 @@ const handleMenuItemClick = (item: any) => {
 
 const storageAdherentString: string | null = localStorage.getItem("Agent");
 const prenom = ref("");
+const propretaire = ref(false);
 
 if (storageAdherentString !== null) {
-  const storageAdherent: { Prenom: string } = JSON.parse(storageAdherentString);
+  const storageAdherent: { Prenom: string; Proprietaire: Proprietaire } =
+    JSON.parse(storageAdherentString);
   prenom.value = storageAdherent.Prenom;
-  console.log("Agent Prénom:", storageAdherent.Prenom);
+  console.log("Agent Prénom:", storageAdherent);
+  if (storageAdherent.Proprietaire) {
+    propretaire.value = true;
+    prenom.value = storageAdherent.Proprietaire.Prenom;
+  }
 } else {
   console.log("Aucun agent trouvé dans le stockage local.");
 }
@@ -92,7 +99,7 @@ if (storageAdherentString !== null) {
                     <Avatar :image="profile" class="mr-2 w-10" shape="circle" />
                     <div class="flex flex-col items-start">
                       <span class="text-[.8rem] font-[300]"
-                        >Agent
+                        >{{ propretaire ? "Propriétaire" : "Agent" }}
                         <i class="fa fa-circle text-green-300 text-[.6rem]"></i>
                       </span>
                       <span class="text-[.8rem] font-[400]">{{ prenom }}</span>
