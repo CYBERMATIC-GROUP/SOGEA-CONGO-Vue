@@ -263,7 +263,7 @@
           @click="toogleSouscription"
           :disabled="tabAmmortissement.length < 1"
           class="w-full bg-bg-primary"
-          >Enregistrer le contrat</Button
+          >Valider le contrat</Button
         >
         <Button
           :disabled="tabAmmortissement.length < 1"

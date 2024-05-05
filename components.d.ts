@@ -61,7 +61,6 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SeachAutomobile: typeof import('./src/components/SeachAutomobile.vue')['default']
     SideBar: typeof import('./src/components/SideBar.vue')['default']
-    SideBarAdherent: typeof import('./src/components/SideBarAdherent.vue')['default']
     Table: typeof import('./src/components/table.vue')['default']
     Tabs: typeof import('./src/components/ui/tabs/Tabs.vue')['default']
     TabsContent: typeof import('./src/components/ui/tabs/TabsContent.vue')['default']

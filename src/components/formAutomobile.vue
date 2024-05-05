@@ -176,7 +176,7 @@
             v-model="IDProduit"
             :valid="errors.IDProduit"
             v-bind="IDProduitAttrs"
-            labelDefaut="Sélectionné la catégorie"
+            labelDefaut="Sélectionné la nature de prime"
             :options="optionCategorie"
           />
           <span class="text-red-color">{{ errors.IDProduit }}</span>
@@ -186,14 +186,16 @@
         <div class="w-full">
           <InputForm
             label="Société"
-            :readonly="!modif"
-            type="select"
+            :readonly="true"
+            type="text"
+            @click="openSociete = true"
             id="Société"
-            v-model="IDLesSocietes"
+            v-model="labelSociete"
             :valid="errors.IDLesSocietes"
             v-bind="IDLesSocietesAttrs"
             labelDefaut="Sélectionné la societé"
             :options="optionSociete"
+            placeholder="Sélectionner la société"
           />
           <span class="text-red-color">{{ errors.IDLesSocietes }}</span>
         </div>
@@ -273,14 +275,15 @@
         <div class="w-full">
           <InputForm
             label="Proprietaire"
-            type="select"
+            type="text"
             id="Proprietaire"
-            :readonly="$route.params.id !== undefined || !modif"
-            v-model="IDProprietaire"
+            @click="open = true"
+            :readonly="true"
+            v-model="labelProprietaire"
             :valid="errors.IDProprietaire"
             v-bind="IDProprietaireAttrs"
             :options="optionProprietaire"
-            labelDefaut="Sélectionné le proprietaire"
+            placeholder="Sélectionné le proprietaire"
           />
           <span class="text-red-color">{{ errors.IDProprietaire }}</span>
         </div>
@@ -318,17 +321,88 @@
       >
     </div>
   </form>
+
+  <Dialog v-if="open" v-model:open="open">
+    <DialogContent class="min-w-[35rem]">
+      <div class="relative w-full max-w-sm items-center">
+        <Input
+          id="search"
+          type="text"
+          v-model="seach"
+          placeholder="Rechercher un propriétaire ici"
+          class="pl-10"
+        />
+        <span
+          class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
+        >
+          <Search class="size-6 text-muted-foreground" />
+        </span>
+      </div>
+      <div v-if="optionProprietaire.length < 1" class="flex justify-center">
+        <a-spin></a-spin>
+      </div>
+      <div
+        class="flex justify-center"
+        v-else-if="optionProprietaire.length == 0"
+      >
+        <p>Pas de propriétaire</p>
+      </div>
+      <div v-else class="max-h-[52vh] overflow-auto">
+        <div v-for="item in filterProprietaire" :key="item.value">
+          <p
+            @click="select(item.value, item.label)"
+            class="cursor-pointer hover:bg-[#F3F6F9]"
+          >
+            {{ item.label }}
+          </p>
+        </div>
+      </div>
+    </DialogContent>
+  </Dialog>
+
+  <Dialog v-if="openSociete" v-model:open="openSociete">
+    <DialogContent class="min-w-[35rem]">
+      <div class="relative w-full max-w-sm items-center">
+        <Input
+          id="search"
+          type="text"
+          v-model="seachSociete"
+          placeholder="Rechercher une société ici"
+          class="pl-10"
+        />
+        <span
+          class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
+        >
+          <Search class="size-6 text-muted-foreground" />
+        </span>
+      </div>
+      <div v-if="optionSociete.length < 1" class="flex justify-center">
+        <a-spin></a-spin>
+      </div>
+      <div class="flex justify-center" v-else-if="optionSociete.length == 0">
+        <p>Pas de société</p>
+      </div>
+      <div v-else class="max-h-[52vh] overflow-auto">
+        <div v-for="item in filterSociete" :key="item.value">
+          <p
+            @click="selectSociete(item.value, item.label)"
+            class="cursor-pointer hover:bg-[#F3F6F9]"
+          >
+            {{ item.label }}
+          </p>
+        </div>
+      </div>
+    </DialogContent>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
-import { Card, CardContent } from "@/components/ui/card";
-import Personne from "@/assets/img/personne.jpg";
 import InputForm from "@/components/inputForm.vue";
-import Voirure from "@/assets/img/car.jpeg";
 import { Button } from "@/components/ui/button";
+import { Search } from "lucide-vue-next";
 import { useForm } from "vee-validate";
 import * as yup from "yup";
-import { ref, defineEmits, watch } from "vue";
+import { ref, defineEmits, watch, computed } from "vue";
 import { useDepartement } from "@/stores/departement";
 import { useGenre } from "@/stores/genre";
 import { onMounted } from "vue";
@@ -343,6 +417,8 @@ import router from "@/router";
 import { useRoute } from "vue-router";
 import { useNature } from "@/stores/naturePrime";
 import profileImg from "../assets/img/car.jpeg";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import type { AnyNsRecord } from "dns";
 
 const { errors, handleSubmit, defineField } = useForm({
   validationSchema: yup.object({
@@ -384,6 +460,37 @@ const { errors, handleSubmit, defineField } = useForm({
     IDProduit: yup.string().required("Veuillez saisir le type d'automobile."),
   }),
 });
+
+const open = ref(false);
+const openSociete = ref(false);
+const seach = ref("");
+const seachSociete = ref("");
+const labelProprietaire = ref();
+const labelSociete = ref();
+
+const filterProprietaire = computed(() => {
+  return optionProprietaire.value.filter((item) =>
+    item.label.toLowerCase().includes(seach.value.toLowerCase())
+  );
+});
+
+const select = (value: any, label: any) => {
+  labelProprietaire.value = label;
+  IDProprietaire.value = value;
+  open.value = false;
+};
+
+const filterSociete = computed(() => {
+  return optionSociete.value.filter((item) =>
+    item.label.toLowerCase().includes(seachSociete.value.toLowerCase())
+  );
+});
+
+const selectSociete = (value: any, label: any) => {
+  labelSociete.value = label;
+  IDLesSocietes.value = value;
+  openSociete.value = false;
+};
 
 const [Immatriculation, ImmatriculationAttrs] = defineField("Immatriculation");
 const [IDProduit, IDProduitAttrs] = defineField("IDProduit");
@@ -623,7 +730,8 @@ const onSubmit = !values
         getSuccess("L'automobile a été ajouter avec succèss");
         setTimeout(() => {
           loading.value = false;
-          router.push({ path: "/liste-automobile" });
+          sessionStorage.setItem("amortissement", JSON.stringify(response));
+          router.push({ path: "/amortissement" });
         }, 3000);
       } catch (error) {
         console.error(error);
