@@ -418,7 +418,6 @@ import { useRoute } from "vue-router";
 import { useNature } from "@/stores/naturePrime";
 import profileImg from "../assets/img/car.jpeg";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import type { AnyNsRecord } from "dns";
 
 const { errors, handleSubmit, defineField } = useForm({
   validationSchema: yup.object({
