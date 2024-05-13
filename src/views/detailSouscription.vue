@@ -277,12 +277,13 @@ if (storageAdherentString !== null) {
   data.value = storageAdherent;
 }
 
-const { errors, handleSubmit, defineField } = useForm({
+const { errors, handleSubmit, defineField , handleReset  } = useForm({
   validationSchema: yup.object({
     xMontant: yup.number().required("Veuillez saisir votre motant."),
     sMobile: yup.string().required("Veuillez saisir le mobile."),
   }),
 });
+
 
 const [xMontant, xMontantAttrs] = defineField("xMontant");
 const [sMobile, sMobileAttrs] = defineField("sMobile");
@@ -290,7 +291,11 @@ const [sMobile, sMobileAttrs] = defineField("sMobile");
 const tabAmmortissement = ref([]);
 const getSoustration = useSouscription();
 
-onMounted(async () => {
+onMounted(()=>{
+  fetchDetailSouscription()
+});
+
+const fetchDetailSouscription = async () =>{
   const donne = {
     IDSOUSCRIPTIONS: data.value?.IDSOUSCRIPTIONS,
   };
@@ -301,7 +306,7 @@ onMounted(async () => {
   } catch (error) {
     console.log(error);
   }
-});
+}
 
 function formatNumber(number: any): any {
   return number.toLocaleString("fr-FR", {
@@ -391,6 +396,7 @@ const openPDF = async () => {
 };
 
 const SaveEcheance = async () => {
+  handleReset();
   open.value = true;
 };
 
@@ -422,7 +428,12 @@ const onSubmit = handleSubmit(async (values) => {
           console.log(response1);
 
           if (response1.Etat == 2) {
-            console.log("Payer");
+            getSuccess("Paiement validé avec succès")
+            fetchDetailSouscription()
+            DetailOperation.value = ''
+            Reference.value = ''
+            open.value = false
+            loadingBTn.value = false;
             clearInterval(interval);
           }
         } catch (error) {
