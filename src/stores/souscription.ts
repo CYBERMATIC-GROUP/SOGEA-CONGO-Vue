@@ -7,7 +7,8 @@ const endPointImprime = "/sogeacongo/v1/Imprime_Releve_Compte/"
 const endPointEcheance = "/sogeacongo/v1/Versement_Echeance/"
 const endPointImprimeViniette = "/sogeacongo/v1/Imprime_Viniette_Recto/"
 const endPointSouscriptionAutomobile = "/sogeacongo/v1/Automobiles_Get_Solde/"
-
+const endPointPayement = "/sogeacongo/v1/MOBILE_MONEY_Demande_Paiement"
+const endPointVerifie = "/sogeacongo/v1/MOBILE_MONEY_Verifie_Statut_Transaction"
 
 export const useSouscription = defineStore('souscription', {
     state: () => ({
@@ -39,6 +40,24 @@ export const useSouscription = defineStore('souscription', {
             return response.data; 
           } catch (error) {
             console.error('Erreur lors de la recuperation des solde', error);
+            throw error;
+          }
+        },
+    async PayementSouscription(data : Object) {
+      try{
+          const response = await api.post(endPointPayement,data)
+          return response.data; 
+        } catch (error) {
+          console.error('Erreur lors du payement des solde', error);
+          throw error;
+        }
+      },
+      async PayementVerifie(data : Object) {
+        try{
+            const response = await api.post(endPointVerifie,data)
+            return response.data; 
+          } catch (error) {
+            console.error('Erreur lors de la verification', error);
             throw error;
           }
         },

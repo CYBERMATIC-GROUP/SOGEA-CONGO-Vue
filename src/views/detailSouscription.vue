@@ -208,19 +208,48 @@
       <div>
         <DialogTitle>Entrez le montant de versement</DialogTitle>
       </div>
-      <form @submit.prevent="onSubmit">
+      <form @submit.prevent="onSubmit" class="flex flex-col space-y-3">
+        <InputForm
+          label="Réference"
+          type="text"
+          id="reference"
+          v-if="Reference"
+          v-model="Reference"
+          :readonly="true"
+        />
+        <InputForm
+          label="Détail"
+          type="text"
+          id="detail"
+          v-if="DetailOperation"
+          v-model="DetailOperation"
+          :readonly="true"
+        />
         <InputForm
           label="Montant"
           type="number"
           id="Montant"
-          v-model="moMontant"
-          :valid="errors.moMontant"
-          v-bind="moMontantAttrs"
+          v-model="xMontant"
+          :valid="errors.xMontant"
+          v-bind="xMontantAttrs"
           placeholder="Entrer le montant"
         />
-        <p class="text-red-color pt-2">{{ errors.moMontant }}</p>
+        <p class="text-red-color pt-2">{{ errors.xMontant }}</p>
+        <InputForm
+          label="Mobile du payeur"
+          type="tel"
+          id="phone"
+          v-model="sMobile"
+          :valid="errors.sMobile"
+          v-bind="sMobileAttrs"
+          placeholder="Entrer le mobile du payeur"
+        />
+        <p class="text-red-color pt-2">{{ errors.sMobile }}</p>
         <div class="flex space-x-5 justify-center mt-5">
-          <Button :loading="loading" type="submit" class="w-full bg-bg-primary"
+          <Button
+            :loading="loadingBTn"
+            type="submit"
+            class="w-full bg-bg-primary"
             >Valider le montant</Button
           >
         </div>
@@ -250,11 +279,13 @@ if (storageAdherentString !== null) {
 
 const { errors, handleSubmit, defineField } = useForm({
   validationSchema: yup.object({
-    moMontant: yup.string().required("Veuillez saisir votre motant."),
+    xMontant: yup.number().required("Veuillez saisir votre motant."),
+    sMobile: yup.string().required("Veuillez saisir le mobile."),
   }),
 });
 
-const [moMontant, moMontantAttrs] = defineField("moMontant");
+const [xMontant, xMontantAttrs] = defineField("xMontant");
+const [sMobile, sMobileAttrs] = defineField("sMobile");
 
 const tabAmmortissement = ref([]);
 const getSoustration = useSouscription();
@@ -363,24 +394,49 @@ const SaveEcheance = async () => {
   open.value = true;
 };
 
+const DetailOperation = ref("");
+const Reference = ref("");
+const loadingBTn = ref(false);
+
 const onSubmit = handleSubmit(async (values) => {
-  loading.value = true;
-  const montant = values.moMontant;
-  console.log("Les datas : ", values);
+  values.xMontant = parseInt(values.xMontant);
+  loadingBTn.value = true;
+  const donne = {
+    nIDSOUSCRIPTION: data.value?.IDSOUSCRIPTIONS,
+    ...values,
+  };
   try {
-    let response = await getSoustration.createEcheance(
-      montant,
-      Number(data.value?.IDSOUSCRIPTIONS),
-      values
-    );
-    loading.value = false;
-    open.value = false;
+    let response = await getSoustration.PayementSouscription(donne);
+    DetailOperation.value = response.DetailOperation;
+    console.log("En Attente de confirmation");
     console.log(response);
-    getSuccess("Nouveau versement ajouté !");
+    Reference.value = response.Reference;
+
+    setTimeout(() => {
+      // Fonction à exécuter après 30 secondes
+      const interval = setInterval(async () => {
+        try {
+          let response1 = await getSoustration.PayementVerifie({
+            Reference: response.NumeroOperation,
+          });
+          console.log(response1);
+
+          if (response1.Etat == 2) {
+            console.log("Payer");
+            clearInterval(interval);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }, 10000);
+
+      setTimeout(() => {
+        clearInterval(interval);
+        console.log("Intervalle annulé après 5 minutes.");
+      }, 180000);
+    }, 10000); // Attente de 30 secondes avant de commencer la vérification
   } catch (error) {
-    console.error((error as any).response?.data?.fault?.detail);
-    loading.value = false;
-    getError((error as any).response?.data?.fault?.detail);
+    console.log(error);
   }
 });
 </script>
