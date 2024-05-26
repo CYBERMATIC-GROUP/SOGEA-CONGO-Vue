@@ -38,7 +38,11 @@ const handleMenuItemClick = (item: any) => {
     localStorage.removeItem("adherent");
     localStorage.removeItem("UTILISATEUER_LOGIN");
     localStorage.removeItem("Agent");
-    router.push({ path: "/connexion" });
+    if(propretaire.value){
+      router.push({ path: "/connexion-proprietaire" });
+    }else{
+      router.push({ path: "/connexion" });
+    }
   }
 };
 

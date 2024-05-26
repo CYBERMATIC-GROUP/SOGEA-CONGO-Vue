@@ -227,9 +227,12 @@
         <span class="text-red-color">{{ errors.NIU }}</span>
       </div>
     </div>
-    <div v-if="!modif" class="flex justify-center mt-5">
+    <div v-if="!modif" class="flex justify-center mt-5 space-x-5">
       <Button @click="Modifier" type="button" class="w-full bg-bg-primary"
         >Modifier</Button
+      >
+      <Button @click="OnImprime" :loading="loadingButton" type="button" class="w-full bg-bg-primary"
+        >Imprimer</Button
       >
     </div>
     <div v-else class="flex justify-center mt-5">
@@ -468,7 +471,6 @@ const onSubmit = !values
     });
 
 const modif = ref(update);
-
 const Modifier = () => {
   modif.value = true;
 };
@@ -478,6 +480,36 @@ function formatHTMLDate(dateString: any) {
   const formattedDate = date.toISOString().slice(0, 10);
   return formattedDate;
 }
+
+const loadingButton = ref(false)
+
+const OnImprime = async () =>{
+  
+    loadingButton.value = true
+  try {
+    let response = await createAdherent.ImprimerAdherent({nIDProprietaire: values.IDProprietaire},values.IDProprietaire)
+    console.log(response)
+    const newWindow = window.open();
+    loadingButton.value = false
+  if (newWindow) {
+    newWindow.document.write(
+      '<embed width="100%" height="100%" ' +
+        'src="' +
+        response.Etat +
+        '" ' +
+        'type="application/pdf" />'
+    );
+  } else {
+    alert(
+      "Votre navigateur bloque l'ouverture de nouvelle fenêtre. Veuillez autoriser les pop-ups pour cette page."
+    );
+  }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
 
 if (values !== undefined) {
   // NomQuartier.value = values.NomQuartier;

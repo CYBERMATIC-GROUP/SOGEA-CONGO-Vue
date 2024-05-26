@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { api } from "../axios/axios";
 import type { Proprietaire } from '@/model/proprietaire';
 const EndPoint = "/sogeacongo/v1/Propietaire"
+const EndPointImprime = "/sogeacongo/v1/IMPRIME_Contrat_Adhesion"
 
 export const useAdherent = defineStore('adherent', {
   state: () => ({
@@ -52,6 +53,16 @@ export const useAdherent = defineStore('adherent', {
             return response.data; 
           } catch (error) {
             console.error('Erreur lors de la suppresionn de l\'adherent', error);
+            throw error;
+          }
+        },
+
+        async ImprimerAdherent(data: object, id: string) {
+          try { 
+            const response = await api.post(EndPointImprime+'/'+id,data);
+            return response.data;
+          } catch (error) {
+            console.error('Erreur lors de l\'impression', error);
             throw error;
           }
         },

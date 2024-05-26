@@ -62,11 +62,6 @@
           </span>
         </div>
         <div class="w-[20rem]">
-          <Button class="w-full bg-bg-primary"
-            >Imprimer l'historique des comptes
-          </Button>
-        </div>
-        <div class="w-[20rem]">
           <Button
             @click="afficher"
             :loading="loading"
@@ -75,6 +70,12 @@
             >AFFICHER
           </Button>
         </div>
+        <div class="w-[20rem]">
+          <Button @click="OnImprime" :disabled="Compte.length<1" :loading="loadingButton" class="w-full bg-bg-primary"
+            >Imprimer l'historique des comptes
+          </Button>
+        </div>
+        
       </div>
       <div>
         <Dialog v-if="open" v-model:open="open">
@@ -114,7 +115,6 @@ import { ref } from "vue";
 import { Search } from "lucide-vue-next";
 import { Input } from "@/components/ui/input";
 import Table from "../components/table.vue";
-import type { Objectif } from "@/model/objectif";
 import { useObjectif } from "@/stores/objectif";
 import FormObjectif from "../components/formObjectif.vue";
 import InputForm from "../components/inputForm.vue";
@@ -169,6 +169,34 @@ const DefaulValue = {
   CodeCompte: codeCompte.value,
   nModePaiment: 1,
 };
+
+const loadingButton = ref(false)
+
+const OnImprime = async () =>{
+  
+    loadingButton.value = true
+  try {
+    let response = await compte.ImprimerCompte(DefaulValue,codeCompte.value) 
+    console.log(response)
+    const newWindow = window.open();
+    loadingButton.value = false
+  if (newWindow) {
+    newWindow.document.write(
+      '<embed width="100%" height="100%" ' +
+        'src="' +
+        response.Etat +
+        '" ' +
+        'type="application/pdf" />'
+    );
+  } else {
+    alert(
+      "Votre navigateur bloque l'ouverture de nouvelle fenêtre. Veuillez autoriser les pop-ups pour cette page."
+    );
+  }
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 const afficher = async () => {
   if (dateDebut.value !== undefined) {

@@ -436,13 +436,31 @@ const onSubmit = handleSubmit(async (values) => {
             loadingBTn.value = false;
             clearInterval(interval);
           }
+
+          if (response1.Etat > 2) {
+            getError("Paiement annulé avec succès")
+            fetchDetailSouscription()
+            DetailOperation.value = ''
+            Reference.value = ''
+            open.value = false
+            loadingBTn.value = false;
+            clearInterval(interval);
+          }
+
+          
         } catch (error) {
           console.log(error);
         }
+        
       }, 10000);
 
       setTimeout(() => {
+        DetailOperation.value = ''
+            Reference.value = ''
+            open.value = false
+            loadingBTn.value = false;
         clearInterval(interval);
+        getError("Paiement annulé avec succès")
         console.log("Intervalle annulé après 5 minutes.");
       }, 180000);
     }, 10000); // Attente de 30 secondes avant de commencer la vérification
